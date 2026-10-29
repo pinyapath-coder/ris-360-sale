@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RIS 360° ฝ่ายขาย</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#f6f5f1; --surface:#fcfcfb; --card:#ffffff; --line:#e4e2db; --line2:#d2cfc6;
+  --ink:#1c1b19; --ink2:#52514e; --ink3:#7d7b75;
+  --brand:#b3122a;
+  --primary:#1f2a44; --primary-ink:#fff;
+  --s-sup:#2a78d6; --s-peer:#eb6834; --s-sub:#1baf7a; --s-self:#eda100; --s-360:#6250d6;
+  --good:#1f7a3a; --good-bg:#e6f3ea; --warn:#9a6200; --warn-bg:#fdf1db; --bad:#b42318; --bad-bg:#fdeceb;
+  --r:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans Thai',system-ui,sans-serif;font-size:15px;line-height:1.55}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--primary)}
+.wrap{max-width:760px;margin:0 auto;padding:16px 16px 120px}
+.wrap.wide{max-width:1180px}
+.top{display:flex;align-items:center;gap:10px;margin:4px 0 18px}
+.logo{width:34px;height:34px;border-radius:9px;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px;letter-spacing:.5px}
+.top .t1{font-weight:600;font-size:15px;line-height:1.2}
+.top .t2{font-size:12.5px;color:var(--ink3)}
+.top .sp{flex:1}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-bottom:14px}
+.card.flat{background:var(--surface)}
+h1{font-size:22px;margin:0 0 4px;font-weight:600;line-height:1.3}
+h2{font-size:17px;margin:0 0 10px;font-weight:600}
+h3{font-size:15px;margin:0 0 8px;font-weight:600}
+.muted{color:var(--ink2)} .small{font-size:13px} .xs{font-size:12px;color:var(--ink3)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line2);background:#fff;border-radius:10px;padding:9px 14px;cursor:pointer;font-weight:500;min-height:40px}
+.btn:hover{border-color:var(--ink3)}
+.btn.pri{background:var(--primary);border-color:var(--primary);color:#fff}
+.btn.pri:hover{filter:brightness(1.12)}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn.sm{padding:5px 10px;min-height:32px;font-size:13px;border-radius:8px}
+.btn.block{width:100%}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.field{display:block;margin-bottom:12px}
+.field span{display:block;font-size:13px;color:var(--ink2);margin-bottom:4px}
+.input{width:100%;border:1px solid var(--line2);border-radius:10px;padding:10px 12px;background:#fff;min-height:44px}
+.input:focus,textarea:focus{outline:2px solid #9ec5f4;border-color:var(--s-sup)}
+textarea.input{min-height:96px;resize:vertical}
+.err{background:var(--bad-bg);color:var(--bad);border-radius:10px;padding:10px 12px;font-size:14px;margin-bottom:12px}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;font-size:12.5px;font-weight:500;background:#f0eee8;color:var(--ink2);white-space:nowrap}
+.chip.good{background:var(--good-bg);color:var(--good)} .chip.warn{background:var(--warn-bg);color:var(--warn)} .chip.bad{background:var(--bad-bg);color:var(--bad)}
+.chip.rel-SELF{background:#fdf3dc;color:#7a5300} .chip.rel-SUP{background:#e3eefb;color:#1c5cab} .chip.rel-PEER{background:#fdebe3;color:#a8431a} .chip.rel-SUB{background:#e2f5ed;color:#0f6e4b}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.bar{height:8px;background:#ecebe5;border-radius:99px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--primary);border-radius:99px}
+.bar.good>i{background:var(--good)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.grow{flex:1}
+.hero{background:var(--primary);color:#fff;border:none}
+.hero .muted,.hero .xs{color:#c9d0e0}
+.hero .bar{background:rgba(255,255,255,.18)} .hero .bar>i{background:#fff}
+.task{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--line);border-radius:12px;background:#fff;margin-bottom:10px}
+.task.done{background:var(--surface)}
+.av{width:42px;height:42px;border-radius:50%;background:#ecebe5;display:grid;place-items:center;font-weight:600;color:var(--ink2);flex:none;font-size:15px}
+.task .nm{font-weight:600;line-height:1.3}
+.check{width:22px;height:22px;border-radius:50%;background:var(--good);color:#fff;display:grid;place-items:center;font-size:13px;flex:none}
+/* form */
+.steps{display:flex;gap:3px;margin:8px 0 18px}
+.steps i{flex:1;height:5px;border-radius:9px;background:#e2e0d9}
+.steps i.on{background:var(--primary)} .steps i.cur{background:var(--s-sup)}
+.pillar{font-size:12.5px;font-weight:600;color:var(--brand);letter-spacing:.2px}
+.q{padding:14px 0;border-top:1px solid var(--line)}
+.q:first-of-type{border-top:none}
+.qt{font-weight:500;margin-bottom:10px}
+.qt b{color:var(--ink3);font-weight:500;margin-right:4px}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.sc{border:1.5px solid var(--line2);background:#fff;border-radius:10px;padding:7px 2px 6px;cursor:pointer;text-align:center;min-height:56px}
+.sc .n{font-size:18px;font-weight:600;line-height:1.1;display:block}
+.sc .l{font-size:10.5px;color:var(--ink3);line-height:1.2;display:block;margin-top:2px}
+.sc:hover{border-color:var(--ink3)}
+.sc.sel{background:var(--primary);border-color:var(--primary);color:#fff}
+.sc.sel .l{color:#d6dbe8}
+.na{margin-top:7px;border:1px dashed var(--line2);background:transparent;border-radius:8px;padding:3px 10px;font-size:12.5px;color:var(--ink3);cursor:pointer}
+.na.sel{background:#ecebe5;border-style:solid;color:var(--ink)}
+.navbar{position:fixed;left:0;right:0;bottom:0;background:rgba(252,252,251,.96);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom));z-index:20}
+.navbar .in{max-width:760px;margin:0 auto;display:flex;gap:10px;align-items:center}
+.legend5{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:8px}
+.legend5 div{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:6px;text-align:center;font-size:12px}
+.legend5 b{display:block;font-size:16px}
+/* HR */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto}
+.tab{padding:10px 14px;border:none;background:none;cursor:pointer;font-weight:500;color:var(--ink2);border-bottom:2.5px solid transparent;white-space:nowrap}
+.tab.on{color:var(--ink);border-bottom-color:var(--primary)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px}
+.kpi .v{font-size:26px;font-weight:600;line-height:1.15}
+.kpi .k{font-size:12.5px;color:var(--ink2)}
+table{border-collapse:collapse;width:100%}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle;font-size:13.5px}
+th{font-size:12px;color:var(--ink2);font-weight:600;background:var(--surface);position:sticky;top:0}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.tbl{overflow:auto;border:1px solid var(--line);border-radius:12px;background:#fff}
+.tbl table tr:last-child td{border-bottom:none}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:10px;overflow:hidden}
+.seg button{border:none;background:#fff;padding:7px 12px;cursor:pointer;font-size:13.5px}
+.seg button.on{background:var(--primary);color:#fff}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.toolbar .input{width:auto;min-height:38px;padding:7px 10px}
+.banner{border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:14px}
+.banner.warn{background:var(--warn-bg);color:#6b4400}
+.banner.info{background:#e8f0fb;color:#1c4a85}
+/* report */
+.rep{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px;margin-bottom:18px}
+.rep-head{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:16px}
+.score-big{font-size:40px;font-weight:600;line-height:1}
+.score-big small{font-size:16px;color:var(--ink3);font-weight:500}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.box{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--surface)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--ink2);margin:4px 0 8px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.legend i.dash{height:0;border-top:2.5px dashed var(--s-self);border-radius:0;width:16px}
+.cmt{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin-bottom:8px;font-size:14px}
+.gap-pos{color:#9a6200;font-weight:600} .gap-neg{color:#1c5cab;font-weight:600}
+.person-list{display:flex;flex-direction:column;gap:2px;max-height:640px;overflow:auto}
+.pl{display:flex;justify-content:space-between;gap:8px;align-items:center;border:none;background:none;text-align:left;padding:8px 10px;border-radius:9px;cursor:pointer}
+.pl:hover{background:#f0eee8} .pl.on{background:var(--primary);color:#fff} .pl.on .xs{color:#c9d0e0}
+.rep-layout{display:grid;grid-template-columns:260px 1fr;gap:16px;align-items:start}
+.modal-bg{position:fixed;inset:0;background:rgba(20,20,18,.45);display:grid;place-items:center;z-index:50;padding:16px}
+.modal{background:#fff;border-radius:16px;padding:20px;max-width:560px;width:100%;max-height:90vh;overflow:auto}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;z-index:60;font-size:14px;box-shadow:0 6px 24px rgba(0,0,0,.2)}
+.demo{position:fixed;right:10px;top:10px;z-index:40;background:#fff;border:1px solid var(--line2);border-radius:12px;padding:10px 12px;box-shadow:0 6px 24px rgba(0,0,0,.12);font-size:13px;max-width:300px}
+.demo b{color:var(--brand)}
+.demo .body{display:none;margin-top:6px}.demo.open .body{display:block}.demo .hd{cursor:pointer;user-select:none}
+.demo select{width:100%;margin:6px 0;border:1px solid var(--line2);border-radius:8px;padding:5px}
+.spin{width:28px;height:28px;border:3px solid #ddd;border-top-color:var(--primary);border-radius:50%;animation:sp 0.8s linear infinite;margin:40px auto}
+@keyframes sp{to{transform:rotate(360deg)}}
+#print-area{display:none}
+@media (max-width:860px){.kpis{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.rep-layout{grid-template-columns:1fr}.person-list{max-height:220px}}
+@media (max-width:420px){.sc .l{font-size:9.5px}.wrap{padding:12px 12px 120px}}
+@media print{
+  body{background:#fff}
+  #app,.demo,.toast,.modal-bg{display:none!important}
+  #print-area{display:block}
+  .rep{border:none;padding:0;margin:0;page-break-after:always;break-after:page}
+  .rep:last-child{page-break-after:auto}
+  .grid2{grid-template-columns:1fr 1fr}
+  @page{size:A4;margin:12mm}
+}
+</style>
+</head>
+<body>
+<div id="app"><div class="spin"></div></div>
+<div id="print-area"></div>
+<div id="overlay"></div>
+<script>
+/* ===== RIS 360 — shared core (used by server Code.gs and the web page) ===== */
+var CORE = (function () {
+
+  var BRANCHES = {
+    EX: 'ผู้บริหาร', NS: 'นิคมสะพานสี่ (GM)', RY: 'ระยอง', BK: 'บ้านค่าย', FR: 'โรงงานโซนระยอง',
+    NK: 'นิคมพัฒนา', MP: 'มาบตาพุด', PD: 'ปลวกแดง', CK: 'ซีเค', FC: 'โรงงานโซนปลวกแดง',
+    SV: 'ศูนย์บริการ', BP: 'ศูนย์ซ่อมสี', OT: 'หน่วยงานอื่น'
+  };
+  var BRANCH_ORDER = ['EX', 'NS', 'RY', 'BK', 'FR', 'NK', 'MP', 'PD', 'CK', 'FC', 'SV', 'BP', 'OT'];
+
+  var ROLES = {
+    EXEC: 'ผู้บริหารสูงสุด', GM: 'ผู้จัดการทั่วไปฝ่ายขาย', MGR: 'ผู้จัดการฝ่ายขาย',
+    AM: 'ผู้ช่วยผู้จัดการฝ่ายขาย', TL: 'หัวหน้าทีม', SPEC: 'เซลส์ดูแลลูกค้าปัจจุบัน (สายเฉพาะทาง)',
+    STAFF: 'พนักงานขาย', PARTNER: 'ผู้ประเมินจากหน่วยงานที่ทำงานร่วม'
+  };
+  var RATEE_ROLES = ['GM', 'MGR', 'AM', 'TL', 'SPEC'];
+  var ROLE_RANK = { EXEC: 5, GM: 4, MGR: 3, AM: 3, TL: 2, SPEC: 1, STAFF: 1, PARTNER: 0 };
+
+  var REL = {
+    SELF: 'ประเมินตนเอง', SUP: 'หัวหน้าโดยตรง', PEER: 'เพื่อนร่วมงาน', SUB: 'ลูกน้อง',
+    PARTNER: 'หน่วยงานที่ทำงานร่วม'
+  };
+  var REL_SHORT = { SELF: 'ตนเอง', SUP: 'หัวหน้า', PEER: 'เพื่อนร่วมงาน', SUB: 'ลูกน้อง', PARTNER: 'หน่วยงานร่วม' };
+  var REL_ORDER = ['SUP', 'PEER', 'SUB', 'PARTNER', 'SELF'];
+
+  /* [รหัส, ชื่อ-สกุล, ชื่อเล่น, สาขา, บทบาท, ทีม] — ถอดจากผังทีมขาย อัปเดต 28.10.26 (ไม่รวมทีมรถใหญ่) */
+  var ROSTER = [
+    ['EXEC01', 'เศรษฐวาจ เตพละกุล', '', 'EX', 'EXEC', ''],
+    ['400424061', 'ประจวบ ลิมปนาวรวงศ์', '', 'NS', 'GM', ''],
+    ['400419157', 'ชนัญชิดา สอนบัญ', 'อิงอร', 'NS', 'TL', ''],
+    ['400423018', 'สุริยะ ถวิลการ', 'ปีกกี้', 'NS', 'STAFF', ''],
+    ['400421127', 'รัชนีวรรณ เรืองน้อย', 'ครีม', 'NS', 'STAFF', ''],
+    ['400423020', 'เพียงตะวัน อินทนิจ', 'เป๊กกี้', 'NS', 'STAFF', ''],
+
+    ['400415049', 'สุเมธ วงษ์พนัส', '', 'RY', 'MGR', ''],
+    ['400406004', 'กชพรรณ ถานะวร', 'นกยูง', 'RY', 'TL', ''],
+    ['400423145', 'บุญรักษ์ เจ๊ะสนู', 'กีม', 'RY', 'STAFF', ''],
+    ['400425049', 'ชัยวัฒน์ ภูมเรศ', 'นิว', 'RY', 'STAFF', ''],
+    ['400425060', 'อนวัทย์ เตรัมย์', 'สายฟ้า', 'RY', 'STAFF', ''],
+    ['400421134', 'รุ่งนภา อิทธิธนากุลช์', 'สาว', 'RY', 'STAFF', ''],
+
+    ['400409006', 'ปิยะนันท์ โพธิวัฒน์ณกุล', '', 'BK', 'AM', ''],
+    ['400418640', 'ธีรภัทร เชียงแรง', 'เดียว', 'BK', 'STAFF', ''],
+    ['400419147', 'ภัทรณัฏฐ์ สมัครแรงค์', 'แซค', 'BK', 'STAFF', ''],
+    ['400423051', 'กุลกัลญา กิตติภิญญาดล', 'จ่อมแจ่ม', 'BK', 'STAFF', ''],
+    ['400420068', 'อินธุอร ศรีเชียงพิมพ์', 'อิน', 'BK', 'STAFF', ''],
+    ['400426021', 'สุกัญญา สอดสี', 'ป๊อป', 'BK', 'STAFF', ''],
+    ['400426048', 'ฉัตรชนก คำดอกรัก', 'เดือน', 'BK', 'STAFF', ''],
+
+    ['400416059', 'กิจกรณ์ ศรีชัย', '', 'FR', 'AM', ''],
+    ['400418664', 'ศิรินทิพย์ สุทัดสัน', 'จอย', 'FR', 'STAFF', ''],
+    ['400423202', 'วิชญาดา ห้วยไผ่', 'ญาดา', 'FR', 'STAFF', ''],
+    ['400419044', 'นันชรร ลี้แดง', 'เปิ้ล', 'FR', 'STAFF', ''],
+    ['400424068', 'ลัดดาวัลย์ ทุมแด่น', 'ตั๊ก', 'FR', 'STAFF', ''],
+
+    ['400418386', 'จิรวรรณ นวลละออง', '', 'NK', 'MGR', ''],
+    ['400423159', 'วิทวัฒน์ เจนดง', 'ก้อง', 'NK', 'STAFF', ''],
+    ['400412020', 'ชนิดา โชคชัย', 'นิว', 'NK', 'STAFF', ''],
+    ['400426042', 'กิตติมา หอมละออ', 'เก๋', 'NK', 'STAFF', ''],
+    ['400426054', 'สุภัคศร นกจันทร์', 'กานต์', 'NK', 'STAFF', ''],
+
+    ['400408003', 'อัมพา ทรงสง่า', '', 'MP', 'MGR', ''],
+    ['400419112', 'ปริยา ปินธุ', 'จอย', 'MP', 'TL', ''],
+    ['400423160', 'พัชรพร คำภูลอย', 'แคท', 'MP', 'STAFF', ''],
+    ['400423052', 'คอลีเยาะ มังมะ', 'ก้า', 'MP', 'STAFF', ''],
+    ['400420069', 'ธัญญาเรศ ศรีพรหมมา', 'มิ้น', 'MP', 'STAFF', ''],
+    ['400421057', 'นุชนาถ บุญประวงค์', 'ปลายฝน', 'MP', 'STAFF', ''],
+    ['400425032', 'ชุติมา ม่วงพาชี', 'ตั๊กกี้', 'MP', 'STAFF', ''],
+    ['400426064', 'กฤษณี เชื่อมพิบูลย์', 'แต้ว', 'MP', 'STAFF', ''],
+
+    ['400414060', 'สมพงษ์ อังคะนาวิน', '', 'PD', 'MGR', ''],
+    ['400414048', 'พัชชาพลอย สร้อยทองรุ้ง', 'เนส', 'PD', 'TL', 'A'],
+    ['400419205', 'สุกัญญา ทันวัน', 'มด', 'PD', 'STAFF', 'A'],
+    ['400423131', 'มาริสา ไชยศรีษะ', 'นุช', 'PD', 'STAFF', 'A'],
+    ['400421042', 'นุชรี ศรีพิมพ์สอ', 'ดาว', 'PD', 'STAFF', 'A'],
+    ['400425065', 'บุษรา ผมพันธ์', 'ปู', 'PD', 'STAFF', 'A'],
+    ['400426031', 'จีระนันท์ สุธรรมมา', 'นุ่น', 'PD', 'STAFF', 'A'],
+    ['400414043', 'ดาวเรือง ขยันค้า', 'แต้ว', 'PD', 'TL', 'B'],
+    ['400419122', 'นิสรา พรหมเกตุ', 'บลู', 'PD', 'STAFF', 'B'],
+    ['400425018', 'ลิดาพัชร์ รัศมีวรรณกิจ', 'ลิตา', 'PD', 'STAFF', 'B'],
+    ['400425058', 'ณัฐมนต์ โง่นแน่น', 'ไอซ์', 'PD', 'STAFF', 'B'],
+    ['400426036', 'กชกร ทัณฑะรักษ์', 'เอิร์น', 'PD', 'STAFF', 'B'],
+
+    ['400414046', 'ศุภวัฒน์ นามศรี', '', 'CK', 'MGR', ''],
+    ['400422014', 'พฤกษา นัดสิทธิ์', 'วิว', 'CK', 'STAFF', ''],
+    ['400422048', 'เนตรนภา ลาภา', 'แบม', 'CK', 'STAFF', ''],
+    ['400421033', 'วรัญชญา มนตรีโพธิ์', 'นิกกี้', 'CK', 'STAFF', ''],
+    ['400425009', 'ศิริวิมล สิงห์ทน', 'แนน', 'CK', 'STAFF', ''],
+    ['400426010', 'อาภรณ์ โคตรแก้ว', 'ปีใหม่', 'CK', 'STAFF', ''],
+    ['400426055', 'วัชราภรณ์ จันทา', 'สมายด์', 'CK', 'STAFF', ''],
+    ['400426057', 'คนัสนันท์ ช่อมะลิ', 'อชิ', 'CK', 'STAFF', ''],
+    ['400426063', 'พรทิพย์ วงศ์โต', 'มาย', 'CK', 'STAFF', ''],
+
+    ['400419200', 'ภาณุวัชร วารเลิศ', '', 'FC', 'MGR', ''],
+    ['400417091', 'นรินดา พรมมา', 'ก้อย', 'FC', 'STAFF', ''],
+    ['400421097', 'นลัทธรรณ ยังแช่ม', 'กระแต', 'FC', 'STAFF', ''],
+    ['400420004', 'ชญาภรณ์ จันดีทอง', 'แพรว', 'FC', 'STAFF', ''],
+    ['400422026', 'ดวงเดือน โพธิ์ไทร', 'ปลื้ม', 'FC', 'STAFF', ''],
+    ['400425007', 'สุนิษา แซ่โส', 'แนท', 'FC', 'STAFF', ''],
+    ['400421024', 'ทิพย์หทัย ภูด่านงัว', 'ข้าว', 'FC', 'STAFF', ''],
+    ['400426065', 'พิฐชญาณ์ จานแก้ว', 'หนิง', 'FC', 'STAFF', '']
+  ];
+
+
+  /* ===== แบบประเมิน 2 สาย · 5 หมวด × 3 ข้อ (ตามไฟล์ หัวข้อประเมิน 360 2569) ===== */
+  var FORMS = {
+    MGMT: {
+      name: 'สายบริหาร', desc: 'หัวหน้าทีม / ผช.ผจก. / ผจก. / GM',
+      weights: { SUP: 40, PEER: 20, SUB: 40 },
+      cats: [
+        { code: 'A', name: 'ภาวะผู้นำและการสร้างทีม', short: 'ภาวะผู้นำ', items: [
+          'ทำให้ทีมทำงานเป็นหนึ่งเดียว และจัดการความขัดแย้งในทีมได้อย่างเป็นธรรม',
+          'อธิบายเป้าหมายให้ทีมเข้าใจ และกระตุ้นให้ทีมมุ่งไปสู่เป้าหมาย',
+          'ประสานงานและให้ความร่วมมือกับแผนกอื่น เพื่อเป้าหมายของบริษัท'] },
+        { code: 'B', name: 'การบริหารงานและติดตามผล', short: 'บริหารงาน', items: [
+          'กำหนดเป้าหมายและลำดับความสำคัญของงานให้ลูกทีมแต่ละคนชัดเจน',
+          'มอบหมายงานได้เหมาะกับความสามารถของลูกทีม',
+          'ติดตามผลงานสม่ำเสมอ และมีแผนสำรองเมื่องานไม่เป็นไปตามแผน'] },
+        { code: 'C', name: 'การพัฒนาลูกทีม', short: 'พัฒนาลูกทีม', items: [
+          'ให้ Feedback ทั้งคำชมและคำแนะนำอย่างตรงไปตรงมาและสม่ำเสมอ',
+          'สอนงาน/โค้ช ช่วยให้ลูกทีมเก่งขึ้นและเติบโตในงาน',
+          'ชื่นชมและให้เครดิตผลงานของลูกทีม'] },
+        { code: 'D', name: 'การตัดสินใจและแก้ปัญหา', short: 'ตัดสินใจ', items: [
+          'มองเห็นปัญหาหรือความเสี่ยงล่วงหน้า และลงมือแก้ไขได้ทันเวลา',
+          'รับฟังความเห็นของทีมก่อนตัดสินใจ และรับผิดชอบต่อผลการตัดสินใจ',
+          'เสนอหรือเปิดรับวิธีการทำงานใหม่ ๆ ที่ทำให้งานดีขึ้น'] },
+        { code: 'E', name: 'การสื่อสารและการปรับตัว', short: 'สื่อสาร/ปรับตัว', items: [
+          'สื่อสารเรื่องสำคัญได้ชัดเจน ครบถ้วน และทันเวลา ทั้งกับหัวหน้า เพื่อนร่วมงาน และลูกทีม',
+          'ตั้งใจรับฟังผู้อื่น และเปิดรับคำติชมโดยไม่ตั้งแง่',
+          'พร้อมรับงานใหม่ งานเร่งด่วน หรือนโยบายที่เปลี่ยนไป และปรับตัวได้ดี'] }
+      ]
+    },
+    SPEC: {
+      name: 'สายเฉพาะทาง', desc: 'ขายลูกค้าปัจจุบัน',
+      weights: { SUP: 40, PEER: 30, PARTNER: 30 },
+      cats: [
+        { code: 'A', name: 'การเยี่ยมและดูแลลูกค้า', short: 'ดูแลลูกค้า', items: [
+          'เยี่ยมและติดต่อลูกค้าเดิมตามแผนอย่างสม่ำเสมอ (เช่น เตือนเช็กระยะ ต่อประกัน วันสำคัญของลูกค้า)',
+          'ลูกค้าไว้วางใจ และติดต่อกลับมาหาโดยตรงเมื่อมีความต้องการ',
+          'ติดตามแก้ไขปัญหา/ข้อร้องเรียนของลูกค้าจนจบเรื่อง'] },
+        { code: 'B', name: 'การสร้างยอดขายจากลูกค้าเดิม', short: 'ยอดขายลูกค้าเดิม', items: [
+          'มองเห็นและปิดการขายซ้ำ/ขายเพิ่มได้ (รถคันใหม่ ประกัน อุปกรณ์ตกแต่ง งานบริการ/ซ่อมสี)',
+          'จัดหรือร่วมกิจกรรมกับลูกค้าที่ก่อให้เกิดยอดขายจริง',
+          'ได้รับการแนะนำลูกค้าใหม่ต่อจากลูกค้าเดิม'] },
+        { code: 'C', name: 'ความเชี่ยวชาญในงานขาย', short: 'เชี่ยวชาญ', items: [
+          'มีความรู้ด้านสินค้า บริการ และโปรโมชัน ตอบลูกค้าได้ถูกต้อง',
+          'ใช้ข้อมูลลูกค้า (ประวัติซื้อ/เข้าศูนย์) มาวางแผนการเยี่ยมและการขาย',
+          'แบ่งปันความรู้และสอนงานให้เพื่อนร่วมงานหรือน้องใหม่'] },
+        { code: 'D', name: 'การทำงานร่วมกับทีม', short: 'ทำงานกับทีม', items: [
+          'ประสานงานกับเซลส์หน้าโชว์รูม ศูนย์บริการ และศูนย์ซ่อมสี ส่งต่อลูกค้าได้ราบรื่น',
+          'บันทึกข้อมูลลูกค้าและรายงานผลถูกต้อง ครบถ้วน ทันเวลา',
+          'ทำงานตามกติกาการแบ่งลูกค้ากับเซลส์ ไม่เกิดความขัดแย้งเรื่องลูกค้า'] },
+        { code: 'E', name: 'ความรับผิดชอบและการปรับตัว', short: 'รับผิดชอบ/ปรับตัว', items: [
+          'ดูแลลูกค้าในพอร์ตเหมือนเป็นเจ้าของ ไม่ปล่อยให้ลูกค้าหลุดหาย',
+          'เปิดรับคำติชม และนำมาปรับปรุงตนเอง',
+          'ปรับตัวกับนโยบาย แคมเปญ หรือวิธีการทำงานใหม่ได้ดี'] }
+      ]
+    }
+  };
+  var OPEN_Q = [
+    { key: 'strength', label: 'สิ่งที่อยากให้เขา “ทำต่อไป” เพราะทำได้ดี (จุดแข็ง)', self: 'สิ่งที่ฉันทำได้ดีและอยากรักษาไว้' },
+    { key: 'improve', label: 'สิ่งที่อยากให้เขา “ทำเพิ่ม/ปรับ” เพื่อให้ดีขึ้น 1–2 เรื่อง', self: 'สิ่งที่ฉันอยากทำเพิ่ม/ปรับ 1–2 เรื่อง' },
+    { key: 'other', label: 'ความเห็นอื่น ๆ (ถ้ามี)', self: 'ความเห็นอื่น ๆ (ถ้ามี)' }
+  ];
+  var SCALE = [
+    { v: 1, label: 'ต้องปรับปรุงเร่งด่วน', hint: 'แทบไม่เห็นพฤติกรรมนี้' },
+    { v: 2, label: 'ควรพัฒนา', hint: 'ทำบ้างเป็นบางครั้ง' },
+    { v: 3, label: 'ตามที่คาดหวัง', hint: 'ทำได้เป็นส่วนใหญ่' },
+    { v: 4, label: 'ดี', hint: 'ทำได้สม่ำเสมอ' },
+    { v: 5, label: 'โดดเด่น', hint: 'ทำเป็นประจำจนเป็นแบบอย่างให้คนอื่น' }
+  ];
+  var BANDS = [
+    { key: 'ready', label: 'พร้อมเติบโต', note: '≥ 4.00 และไม่มีหมวดใดต่ำกว่า 3.00 · พร้อมขึ้นระดับถัดไป' },
+    { key: 'develop', label: 'พัฒนาต่อ', note: '3.50–3.99 · พัฒนา 3–6 เดือนแล้วทบทวน' },
+    { key: 'notready', label: 'ยังไม่พร้อม', note: '< 3.50 · เน้นพัฒนาในตำแหน่งปัจจุบัน' }
+  ];
+  var ITEM_KEYS = [];
+  ['A', 'B', 'C', 'D', 'E'].forEach(function (c) { [1, 2, 3].forEach(function (i) { ITEM_KEYS.push(c + i); }); });
+
+  function formOf(role) { return role === 'SPEC' ? 'SPEC' : 'MGMT'; }
+  function rosterObjects() {
+    return ROSTER.map(function (r) {
+      return { id: r[0], name: r[1], nick: r[2], branch: r[3], role: r[4], team: r[5], active: true, pin: '' };
+    });
+  }
+  function displayName(e) { return e ? (e.name + (e.nick ? ' (' + e.nick + ')' : '')) : '-'; }
+  function roleLabel(e) { return ROLES[e.role] || e.role; }
+
+  /* เลือกเพื่อนร่วมงานแบบหมุนเวียน: คนที่ i ได้รับการประเมินจากคนที่ i+1..i+k
+     ทุกคนจึงประเมินเพื่อน k คน และถูกเพื่อนประเมิน k คนเท่ากัน */
+  function rotatePeers(group, k) {
+    var out = [], n = group.length; k = Math.min(k, n - 1);
+    group.forEach(function (r, i) { for (var j = 1; j <= k; j++) out.push([group[(i + j) % n], r]); });
+    return out;
+  }
+
+  /* ===== สร้างคู่ประเมินอัตโนมัติ =====
+     หัวหน้าทีม   ← ผจก./ผช.ผจก.สาขา · หัวหน้าทีมคนอื่น (หมุนเวียน 3 คน) · ลูกทีมในทีม · ตนเอง
+     ผจก./ผช.ผจก. ← GM · ผจก./ผช.ผจก.คนอื่น (หมุนเวียน 3 คน) · หัวหน้าทีม+พนักงานในสาขา · ตนเอง
+     GM           ← ผู้บริหารสูงสุด · ผจก./ผช.ผจก.ทุกคน + ทีมในสาขาของ GM · ตนเอง
+     สายเฉพาะทาง ← หัวหน้าสาขา (หรือ GM) · เพื่อนสายเฉพาะทาง (หมุนเวียน) · หน่วยงานร่วม (HR เพิ่มเองในชีต) · ตนเอง */
+  function generateAssignments(emps, opt) {
+    opt = opt || {};
+    var k = Number(opt.maxPeers || 3);
+    var act = emps.filter(function (e) { return e.active; });
+    var out = [], seen = {};
+    function add(rater, ratee, rel) {
+      if (!rater || !ratee) return;
+      var key = rater.id + '>' + ratee.id;
+      if (seen[key]) return;
+      seen[key] = 1;
+      out.push({ raterId: rater.id, rateeId: ratee.id, rel: rel });
+    }
+    function head(branch) {
+      var c = act.filter(function (e) { return e.branch === branch && (e.role === 'MGR' || e.role === 'AM' || e.role === 'GM'); });
+      c.sort(function (a, b) { return ROLE_RANK[b.role] - ROLE_RANK[a.role]; });
+      return c[0];
+    }
+    var byBranch = function (a, b) { return BRANCH_ORDER.indexOf(a.branch) - BRANCH_ORDER.indexOf(b.branch) || (a.team < b.team ? -1 : 1); };
+    var gm = act.filter(function (e) { return e.role === 'GM'; })[0];
+    var exec = act.filter(function (e) { return e.role === 'EXEC'; })[0];
+    var mgrs = act.filter(function (e) { return e.role === 'MGR' || e.role === 'AM'; }).sort(byBranch);
+    var tls = act.filter(function (e) { return e.role === 'TL'; }).sort(byBranch);
+    var specs = act.filter(function (e) { return e.role === 'SPEC'; }).sort(byBranch);
+
+    act.forEach(function (r) {
+      if (RATEE_ROLES.indexOf(r.role) < 0) return;
+      add(r, r, 'SELF');
+      if (r.role === 'TL') {
+        add(head(r.branch) || gm, r, 'SUP');
+        act.forEach(function (s) { if (s.role === 'STAFF' && s.branch === r.branch && (s.team || '') === (r.team || '')) add(s, r, 'SUB'); });
+      } else if (r.role === 'MGR' || r.role === 'AM') {
+        add(gm, r, 'SUP');
+        act.forEach(function (s) { if ((s.role === 'TL' || s.role === 'STAFF') && s.branch === r.branch) add(s, r, 'SUB'); });
+      } else if (r.role === 'GM') {
+        add(exec, r, 'SUP');
+        mgrs.forEach(function (s) { add(s, r, 'SUB'); });
+        act.forEach(function (s) { if ((s.role === 'TL' || s.role === 'STAFF') && s.branch === r.branch) add(s, r, 'SUB'); });
+      } else if (r.role === 'SPEC') {
+        add(head(r.branch) || gm, r, 'SUP');
+      }
+    });
+    [tls, mgrs, specs].forEach(function (g) { rotatePeers(g, k).forEach(function (p) { add(p[0], p[1], 'PEER'); }); });
+    return out;
+  }
+
+  function mean(a) { return a.length ? a.reduce(function (s, x) { return s + x; }, 0) / a.length : null; }
+  function r2(x) { return x == null ? null : Math.round(x * 100) / 100; }
+
+  /* คะแนนรายหมวด (1–5) ของแบบประเมิน 1 ชุด — N/A (0/ว่าง) ไม่นำมาคิด */
+  function catScores(answers) {
+    return ['A', 'B', 'C', 'D', 'E'].map(function (c) {
+      var v = [];
+      [1, 2, 3].forEach(function (i) { var x = Number(answers[c + i]); if (x >= 1 && x <= 5) v.push(x); });
+      return mean(v);
+    });
+  }
+  function overall(cats) { return mean(cats.filter(function (x) { return x != null; })); }
+  function bandOf(score, cats) {
+    if (score == null) return null;
+    var minCat = Math.min.apply(null, cats.filter(function (x) { return x != null; }));
+    if (score >= 4 && minCat >= 3) return BANDS[0];
+    if (score >= 3.5) { var b = BANDS[1]; return score >= 4 ? { key: b.key, label: b.label, note: 'คะแนนรวม ≥ 4.00 แต่มีหมวดต่ำกว่า 3.00 · ' + b.note } : b; }
+    return BANDS[2];
+  }
+
+  /* ===== สถานะการประเมิน ===== */
+  function status(emps, asg, resps) {
+    var done = {}; resps.forEach(function (r) { done[r.raterId + '>' + r.rateeId] = r.ts || true; });
+    var raters = {}, ratees = {};
+    asg.forEach(function (a) {
+      var d = !!done[a.raterId + '>' + a.rateeId];
+      (raters[a.raterId] = raters[a.raterId] || { id: a.raterId, total: 0, done: 0, pending: [] });
+      raters[a.raterId].total++; if (d) raters[a.raterId].done++; else raters[a.raterId].pending.push(a.rateeId);
+      (ratees[a.rateeId] = ratees[a.rateeId] || { id: a.rateeId, total: 0, done: 0, byRel: {} });
+      ratees[a.rateeId].total++; if (d) ratees[a.rateeId].done++;
+      var br = ratees[a.rateeId].byRel[a.rel] = ratees[a.rateeId].byRel[a.rel] || { total: 0, done: 0 };
+      br.total++; if (d) br.done++;
+    });
+    var doneA = asg.filter(function (a) { return done[a.raterId + '>' + a.rateeId]; }).length;
+    return { raters: raters, ratees: ratees, total: asg.length, done: doneA };
+  }
+
+  /* ===== สรุปผลรายบุคคล =====
+     - คะแนนกลุ่ม = เฉลี่ยของผู้ตอบในกลุ่ม · คะแนนถ่วงน้ำหนัก = Σ(น้ำหนัก × กลุ่ม) / Σน้ำหนักของกลุ่มที่มีข้อมูล
+     - ไม่รวมการประเมินตนเอง · ลูกน้องตอบน้อยกว่า MIN_SUB_N (3) คน → รวมกับกลุ่มเพื่อน (รวมน้ำหนักด้วย)
+     - กลุ่มเพื่อน/ลูกน้อง/หน่วยงานร่วม ที่มีผู้ตอบน้อยกว่า MIN_GROUP_N (2) คน ไม่แสดงแยก แต่ยังนับในคะแนน */
+  function aggregate(emps, asg, resps, cfg) {
+    cfg = cfg || {};
+    var minN = Number(cfg.MIN_GROUP_N || 2), minSub = Number(cfg.MIN_SUB_N || 3);
+    var relOf = {}, expected = {};
+    asg.forEach(function (a) { relOf[a.raterId + '>' + a.rateeId] = a.rel; (expected[a.rateeId] = expected[a.rateeId] || {})[a.rel] = 1; });
+    var res = {}, lists = {};
+    emps.filter(function (e) { return RATEE_ROLES.indexOf(e.role) >= 0 && e.active; }).forEach(function (e) {
+      res[e.id] = { id: e.id, form: formOf(e.role), groups: {}, comments: { strength: [], improve: [], other: [] }, selfComments: null, merged: false };
+      lists[e.id] = { SELF: [], SUP: [], PEER: [], SUB: [], PARTNER: [] };
+    });
+    resps.forEach(function (r) {
+      var rel = relOf[r.raterId + '>' + r.rateeId] || r.rel;
+      if (!res[r.rateeId] || !lists[r.rateeId][rel]) return;
+      lists[r.rateeId][rel].push({ cats: catScores(r.answers), r: r });
+    });
+    Object.keys(res).forEach(function (id) {
+      var R = res[id], L = lists[id], F = FORMS[R.form];
+      // ใช้น้ำหนักเฉพาะกลุ่มที่มีคู่ประเมินจริง (เช่น GM ไม่มีกลุ่มเพื่อน → แบ่งน้ำหนักให้หัวหน้า/ลูกน้อง)
+      var W = {}, ex = expected[id] || {}; Object.keys(F.weights).forEach(function (k) { if (ex[k]) W[k] = F.weights[k]; });
+      if (L.SUB.length > 0 && L.SUB.length < minSub) {
+        L.PEER = L.PEER.concat(L.SUB); L.SUB = []; R.merged = true;
+        W.PEER = (W.PEER || 0) + (W.SUB || 0); W.SUB = 0;
+      }
+      R.weights = W;
+      REL_ORDER.forEach(function (rel) {
+        var list = L[rel];
+        var cats = [0, 1, 2, 3, 4].map(function (ci) { return r2(mean(list.map(function (x) { return x.cats[ci]; }).filter(function (x) { return x != null; }))); });
+        R.groups[rel] = { n: list.length, cats: cats, score: r2(overall(cats)),
+          hidden: rel !== 'SUP' && rel !== 'SELF' && list.length > 0 && list.length < minN };
+        list.forEach(function (x) {
+          if (rel === 'SELF') { R.selfComments = { strength: x.r.strength || '', improve: x.r.improve || '', other: x.r.other || '' }; return; }
+          var tag = R.merged && rel === 'PEER' ? 'PEER' : rel;
+          ['strength', 'improve', 'other'].forEach(function (k) { if (x.r[k]) R.comments[k].push({ rel: tag, text: x.r[k] }); });
+        });
+      });
+      var cats360 = [0, 1, 2, 3, 4].map(function (ci) {
+        var s = 0, w = 0;
+        Object.keys(W).forEach(function (rel) { var g = R.groups[rel]; var v = g && g.cats[ci]; if (v != null && W[rel] > 0) { s += v * W[rel]; w += W[rel]; } });
+        return w ? r2(s / w) : null;
+      });
+      var usedW = 0, totW = 0;
+      Object.keys(W).forEach(function (rel) { totW += W[rel]; if (R.groups[rel] && R.groups[rel].n) usedW += W[rel]; });
+      R.others = { cats: cats360, score: r2(overall(cats360)), n: ['SUP', 'PEER', 'SUB', 'PARTNER'].reduce(function (s, k) { return s + R.groups[k].n; }, 0), weightCoverage: totW ? Math.round(usedW / totW * 100) : 0 };
+      R.band = bandOf(R.others.score, cats360);
+      var ranked = cats360.map(function (v, ci) { return { ci: ci, v: v }; }).filter(function (x) { return x.v != null; });
+      ranked.sort(function (a, b) { return b.v - a.v; });
+      R.strengths = ranked.slice(0, 2).map(function (x) { return x.ci; });
+      R.develop = ranked.slice(-2).reverse().map(function (x) { return x.ci; });
+      // หาข้อย่อยที่สูง/ต่ำสุด (จากผู้อื่น ถ่วงน้ำหนัก)
+      R.items = ITEM_KEYS.map(function (k) {
+        var s = 0, w = 0;
+        Object.keys(W).forEach(function (rel) {
+          var v = L[rel].map(function (x) { return Number(x.r.answers[k]); }).filter(function (x) { return x >= 1 && x <= 5; });
+          if (v.length && W[rel] > 0) { s += mean(v) * W[rel]; w += W[rel]; }
+        });
+        var sv = L.SELF.map(function (x) { return Number(x.r.answers[k]); }).filter(function (x) { return x >= 1 && x <= 5; });
+        return { key: k, others: w ? r2(s / w) : null, self: sv.length ? sv[0] : null };
+      });
+      R.gaps = [0, 1, 2, 3, 4].map(function (ci) {
+        var s = R.groups.SELF.cats[ci], o = cats360[ci];
+        return (s == null || o == null) ? null : r2(s - o);
+      });
+    });
+    return res;
+  }
+
+  function makePin() { return String(Math.floor(100000 + Math.random() * 900000)); }
+
+  return {
+    BRANCHES: BRANCHES, BRANCH_ORDER: BRANCH_ORDER, ROLES: ROLES, RATEE_ROLES: RATEE_ROLES, ROLE_RANK: ROLE_RANK,
+    REL: REL, REL_SHORT: REL_SHORT, REL_ORDER: REL_ORDER, ROSTER: ROSTER, FORMS: FORMS, OPEN_Q: OPEN_Q,
+    SCALE: SCALE, BANDS: BANDS, ITEM_KEYS: ITEM_KEYS, formOf: formOf, rosterObjects: rosterObjects, displayName: displayName,
+    roleLabel: roleLabel, generateAssignments: generateAssignments, catScores: catScores, overall: overall,
+    bandOf: bandOf, status: status, aggregate: aggregate, makePin: makePin
+  };
+})();
+
+
+</script>
+<script>
+(function(){
+'use strict';
+var C = CORE;
+var IS_GAS = typeof google !== 'undefined' && google.script && google.script.run;
+var S = { view:'loading', me:null, pin:'', tasks:[], cfg:null, err:'', busy:false, form:null,
+  hr:{ pw:'', data:null, report:null, tab:'overview', filter:'pending', branch:'', q:'', sel:null } };
+var charts = [];
+var THM = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+var COL = { SUP:'#2a78d6', PEER:'#eb6834', SUB:'#1baf7a', PARTNER:'#1baf7a', SELF:'#eda100', O:'#6250d6' };
+function formFor(role){ return C.FORMS[C.formOf(role)]; }
+
+/* ---------------- backend ---------------- */
+function call(req){
+  if (IS_GAS) return new Promise(function(res, rej){
+    google.script.run.withSuccessHandler(function(r){ r && r.ok ? res(r.data) : rej(new Error(r ? r.error : 'ไม่มีการตอบกลับ')); })
+      .withFailureHandler(function(e){ rej(e instanceof Error ? e : new Error(String(e))); }).api(req);
+  });
+  return new Promise(function(res, rej){ setTimeout(function(){ try { res(JSON.parse(JSON.stringify(DEMO.handle(req)))); } catch(e){ rej(e); } }, 120); });
+}
+
+/* ---------------- demo backend (ใช้เฉพาะตอนเปิดนอก Google Apps Script) ---------------- */
+var DEMO = (function(){
+  var emps = C.rosterObjects(); var n = 0;
+  emps.forEach(function(e){ n++; e.pin = String(100000 + ((n * 7919) % 899999)); });
+  var asg = C.generateAssignments(emps), resps = [];
+  var cfg = { TITLE:'ประเมินผล 360 องศา ฝ่ายขาย ปี 2569', START:'2026-11-02', END:'2026-11-08', ADMIN_PASSWORD:'ris360hr', MIN_GROUP_N:2, MIN_SUB_N:3 };
+  function byId(id){ return emps.filter(function(e){ return e.id === id; })[0]; }
+  function auth(id, pin){ var e = byId(String(id).trim()); if (!e || e.pin !== String(pin).trim()) throw new Error('รหัสพนักงานหรือ PIN ไม่ถูกต้อง'); return e; }
+  function pc(){ return { title:cfg.TITLE, start:cfg.START, end:cfg.END, open:true, phase:'open', today:'2026-11-04', mode:'OPEN' }; }
+  function ts(){ var d = new Date(); return d.toISOString().slice(0,16).replace('T',' '); }
+  function randomFill(rate){
+    var done = {}; resps.forEach(function(r){ done[r.raterId+'>'+r.rateeId] = 1; });
+    var bias = {}; emps.forEach(function(e){ bias[e.id] = { base: 3 + Math.random()*1.4, comp: [0,1,2,3,4].map(function(){ return (Math.random()-.5)*1.4; }) }; });
+    var S1 = ['ทุ่มเทและเป็นแบบอย่างในการทำงาน','รับฟังลูกทีมและให้คำปรึกษาดี','ติดตามยอดขายใกล้ชิด ทำให้ทีมถึงเป้า','ประสานงานกับฝ่ายสินเชื่อได้รวดเร็ว','ใจเย็น แก้ปัญหาลูกค้าได้ดี'];
+    var I1 = ['อยากให้ให้ Feedback บ่อยขึ้น','ควรวางแผนล่วงหน้าให้ชัดเจนกว่านี้','อยากให้สอนงานน้องใหม่มากขึ้น','สื่อสารนโยบายให้ทั่วถึงทุกคน','ควรจัดการความขัดแย้งในทีมให้เร็วขึ้น'];
+    asg.forEach(function(a){
+      if (done[a.raterId+'>'+a.rateeId] || Math.random() > rate) return;
+      var b = bias[a.rateeId], lift = a.rel === 'SELF' ? .45 : a.rel === 'SUB' ? -.15 : 0, ans = {};
+      C.ITEM_KEYS.forEach(function(k, idx){ var ci = Math.floor(idx / 3);
+        var v = Math.round(b.base + b.comp[ci] + lift + (Math.random()-.5)*1.3); v = Math.max(1, Math.min(5, v));
+        if (a.rel === 'SUB' && Math.random() < .04) v = 0;
+        ans[k] = v; });
+      resps.push({ ts: ts(), raterId:a.raterId, rateeId:a.rateeId, rel:a.rel, answers:ans,
+        strength: Math.random() < .6 ? S1[Math.floor(Math.random()*S1.length)] : '', improve: Math.random() < .55 ? I1[Math.floor(Math.random()*I1.length)] : '', other: Math.random() < .1 ? 'ขอบคุณที่ดูแลทีมค่ะ' : '' });
+    });
+  }
+  function handle(q){
+    switch(q.action){
+      case 'login': {
+        var me = auth(q.id, q.pin), done = {};
+        resps.forEach(function(r){ if (r.raterId === me.id) done[r.rateeId] = r.ts; });
+        return { me: me, cfg: pc(), tasks: asg.filter(function(a){ return a.raterId === me.id; }).map(function(a){
+          var t = byId(a.rateeId); return { rateeId:t.id, name:t.name, nick:t.nick, role:t.role, branch:t.branch, rel:a.rel, form:C.formOf(t.role), done:!!done[t.id], ts:done[t.id]||'' }; }) };
+      }
+      case 'getResponse': { var m2 = auth(q.id, q.pin); return resps.filter(function(r){ return r.raterId === m2.id && r.rateeId === q.rateeId; })[0] || null; }
+      case 'submit': {
+        var m3 = auth(q.id, q.pin), a = asg.filter(function(x){ return x.raterId === m3.id && x.rateeId === q.rateeId; })[0];
+        if (!a) throw new Error('ไม่พบรายการประเมินนี้');
+        resps = resps.filter(function(r){ return !(r.raterId === m3.id && r.rateeId === q.rateeId); });
+        resps.push({ ts: ts(), raterId:m3.id, rateeId:q.rateeId, rel:a.rel, answers:q.answers, strength:q.strength, improve:q.improve, other:q.other });
+        return { saved:true };
+      }
+      case 'admin': if (q.pw !== cfg.ADMIN_PASSWORD) throw new Error('รหัสผ่าน HR ไม่ถูกต้อง');
+        return { employees: emps, assignments: asg, done: resps.map(function(r){ return [r.raterId, r.rateeId, r.ts]; }), cfg: pc(), url: 'https://script.google.com/macros/s/…/exec' };
+      case 'report': if (q.pw !== cfg.ADMIN_PASSWORD) throw new Error('รหัสผ่าน HR ไม่ถูกต้อง');
+        return { report: C.aggregate(emps, asg, resps, cfg), minN: 2 };
+      case 'regenerate': asg = C.generateAssignments(emps); return { count: asg.length };
+      case 'writeSummary': return { rows: 0, demo: true };
+      case 'demoFill': randomFill(q.rate || .85); return { n: resps.length };
+      case 'demoReset': resps = []; return { n: 0 };
+    }
+    throw new Error('unknown');
+  }
+  return { handle: handle, emps: emps };
+})();
+
+/* ---------------- helpers ---------------- */
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function thDate(iso){ if(!iso) return ''; var p = iso.split('-'); return Number(p[2]) + ' ' + THM[Number(p[1])-1] + ' ' + (Number(p[0]) + 543); }
+function daysLeft(cfg){ var t = new Date(cfg.today+'T00:00:00'), e = new Date(cfg.end+'T00:00:00'); return Math.round((e - t)/864e5) + 1; }
+function initials(name){ return (name || '?').trim().charAt(0); }
+function f1(x){ return x == null ? '–' : (Math.round(x*100)/100).toFixed(2); }
+function f2(x){ return x == null ? '–' : x.toFixed(2); }
+function f1s(x){ return x == null ? '–' : (Math.round(x*10)/10).toFixed(1); }
+function branchName(b){ return C.BRANCHES[b] || b; }
+function toast(msg){ var d = document.createElement('div'); d.className = 'toast'; d.textContent = msg; document.body.appendChild(d); setTimeout(function(){ d.remove(); }, 2600); }
+function modal(html, onMount){
+  var o = document.getElementById('overlay');
+  o.innerHTML = '<div class="modal-bg" data-act="modal-close-bg"><div class="modal">' + html + '</div></div>';
+  if (onMount) onMount(o.querySelector('.modal'));
+}
+function closeModal(){ document.getElementById('overlay').innerHTML = ''; }
+function copyText(text, okMsg){
+  function fallback(){
+    modal('<h2>คัดลอกข้อความ</h2><p class="small muted">กด Ctrl+C (หรือกดค้างแล้วเลือก "คัดลอก") แล้วนำไปวางใน LINE / Excel</p><textarea class="input" id="cpy" style="min-height:240px">' + esc(text) + '</textarea><div class="row" style="justify-content:flex-end;margin-top:10px"><button class="btn pri" data-act="modal-close">ปิด</button></div>',
+      function(m){ var t = m.querySelector('#cpy'); t.focus(); t.select(); try { if (document.execCommand('copy')) toast(okMsg || 'คัดลอกแล้ว'); } catch(e){} });
+  }
+  try { navigator.clipboard.writeText(text).then(function(){ toast(okMsg || 'คัดลอกแล้ว'); }, fallback); } catch(e){ fallback(); }
+}
+function confirmBox(title, body, okLabel, fn){
+  modal('<h2>' + esc(title) + '</h2><p class="muted">' + body + '</p><div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn" data-act="modal-close">ยกเลิก</button><button class="btn pri" id="okbtn">' + esc(okLabel) + '</button></div>',
+    function(m){ m.querySelector('#okbtn').onclick = function(){ closeModal(); fn(); }; });
+}
+function draftKey(){ return 'ris360_' + S.me.id + '_' + S.form.task.rateeId; }
+function saveDraft(){ try { localStorage.setItem(draftKey(), JSON.stringify({ a:S.form.answers, s:S.form.strength, i:S.form.improve, o:S.form.other })); } catch(e){} }
+function loadDraft(){ try { var x = localStorage.getItem(draftKey()); return x ? JSON.parse(x) : null; } catch(e){ return null; } }
+function clearDraft(){ try { localStorage.removeItem(draftKey()); } catch(e){} }
+function destroyCharts(){ charts.forEach(function(c){ try{ c.destroy(); }catch(e){} }); charts = []; }
+function header(sub, right){
+  return '<div class="top"><div class="logo">RIS</div><div><div class="t1">' + esc(S.cfg ? S.cfg.title : 'ประเมินผล 360 องศา ฝ่ายขาย') + '</div><div class="t2">' + esc(sub || 'Rayong Isuzu Sales') + '</div></div><div class="sp"></div>' + (right || '') + '</div>';
+}
+function phaseChip(cfg){
+  if (!cfg) return '';
+  if (cfg.phase === 'open'){ var d = daysLeft(cfg); return '<span class="chip good">● เปิดรับแบบประเมิน · เหลือ ' + d + ' วัน</span>'; }
+  if (cfg.phase === 'before') return '<span class="chip warn">ยังไม่เปิด · เริ่ม ' + thDate(cfg.start) + '</span>';
+  return '<span class="chip bad">ปิดรับแบบประเมินแล้ว</span>';
+}
+
+/* ---------------- render ---------------- */
+function render(){
+  destroyCharts();
+  var v = S.view, h = '';
+  if (v === 'loading') h = '<div class="spin"></div>';
+  else if (v === 'login') h = vLogin();
+  else if (v === 'home') h = vHome();
+  else if (v === 'form') h = vForm();
+  else if (v === 'hrlogin') h = vHrLogin();
+  else if (v === 'hr') h = vHr();
+  document.getElementById('app').innerHTML = h + (IS_GAS ? '' : vDemo());
+  if (v === 'hr' && S.hr.tab === 'report') mountReportCharts();
+  window.scrollTo && v !== 'form' && 0;
+}
+
+function vLogin(){
+  return '<div class="wrap" style="max-width:440px">' + header('Rayong Isuzu Sales') +
+    '<div class="card"><h1>เข้าสู่แบบประเมิน</h1><p class="muted small" style="margin-top:0">ใช้รหัสพนักงานและ PIN 6 หลักที่ได้รับจาก HR (หรือกดลิงก์ส่วนตัวที่ HR ส่งให้)</p>' +
+    (S.err ? '<div class="err">' + esc(S.err) + '</div>' : '') +
+    '<form data-form="login"><label class="field"><span>รหัสพนักงาน</span><input class="input" name="empid" inputmode="numeric" autocomplete="username" required></label>' +
+    '<label class="field"><span>PIN</span><input class="input" name="pin" inputmode="numeric" type="password" autocomplete="current-password" required></label>' +
+    '<button class="btn pri block" ' + (S.busy ? 'disabled' : '') + '>' + (S.busy ? 'กำลังตรวจสอบ…' : 'เข้าสู่ระบบ') + '</button></form></div>' +
+    '<p class="xs" style="text-align:center">ข้อมูลของคุณจะถูกเก็บเป็นความลับ · <a href="#" data-act="go-hrlogin">สำหรับ HR</a></p></div>';
+}
+
+function vHome(){
+  var t = S.tasks.slice(), done = t.filter(function(x){ return x.done; }).length, cfg = S.cfg;
+  var relRank = { SELF:0, SUP:1, PEER:2, SUB:3 };
+  t.sort(function(a, b){ return (a.done - b.done) || (relRank[a.rel] - relRank[b.rel]) || a.name.localeCompare(b.name, 'th'); });
+  var me = S.me, pct = t.length ? Math.round(done / t.length * 100) : 0;
+  var h = '<div class="wrap">' + header(C.ROLES[me.role] + ' · ' + branchName(me.branch), '<button class="btn sm ghost" data-act="logout">ออกจากระบบ</button>');
+  h += '<div class="card hero"><div class="xs" style="margin-bottom:2px">สวัสดีค่ะ</div><h1>คุณ' + esc(me.nick || me.name.split(' ')[0]) + '</h1>' +
+    '<div class="muted small">ช่วงประเมิน ' + thDate(cfg.start) + ' – ' + thDate(cfg.end) + '</div>' +
+    '<div class="row" style="margin-top:14px"><div class="grow"><div class="bar"><i style="width:' + pct + '%"></i></div></div><b>' + done + '/' + t.length + '</b></div>' +
+    '<div class="xs" style="margin-top:6px">' + (done === t.length && t.length ? 'ขอบคุณค่ะ คุณประเมินครบทุกคนแล้ว 🎉' : 'เหลือแบบประเมินอีก ' + (t.length - done) + ' ชุด · ใช้เวลาประมาณชุดละ 3 นาที') + '</div></div>';
+  h += '<div style="margin-bottom:10px">' + phaseChip(cfg) + '</div>';
+  if (!t.length) h += '<div class="card">ไม่มีรายการที่ต้องประเมินสำหรับคุณ</div>';
+  t.forEach(function(x){
+    var can = cfg.open;
+    h += '<div class="task ' + (x.done ? 'done' : '') + '"><div class="av">' + esc(initials(x.name)) + '</div><div class="grow"><div class="nm">' +
+      (x.rel === 'SELF' ? 'ประเมินตนเอง' : esc(x.name) + (x.nick ? ' <span class="muted" style="font-weight:400">(' + esc(x.nick) + ')</span>' : '')) + '</div>' +
+      '<div class="xs">' + esc(C.ROLES[x.role]) + ' · ' + esc(branchName(x.branch)) + '</div>' +
+      '<div style="margin-top:4px"><span class="chip rel-' + x.rel + '">' + (x.rel === 'SELF' ? 'ตนเอง' : 'คุณเป็น' + relAs(x.rel)) + '</span></div></div>' +
+      (x.done ? '<div style="text-align:right"><div class="check">✓</div>' + (can ? '<button class="btn sm ghost" data-act="open" data-id="' + x.rateeId + '" style="margin-top:4px">แก้ไข</button>' : '') + '</div>'
+        : '<button class="btn pri sm" data-act="open" data-id="' + x.rateeId + '" ' + (can ? '' : 'disabled') + '>ประเมิน</button>') + '</div>';
+  });
+  h += '<p class="xs" style="margin-top:16px">🔒 ผลจากเพื่อนร่วมงานและลูกทีมจะรายงานเป็นค่าเฉลี่ยของกลุ่ม ไม่ระบุชื่อผู้ประเมิน · ส่งแล้วยังแก้ไขได้จนถึงวันปิดรับ</p></div>';
+  return h;
+}
+function relAs(rel){ return rel === 'SUP' ? 'หัวหน้าของเขา' : rel === 'PEER' ? 'เพื่อนร่วมงาน' : rel === 'SUB' ? 'ลูกน้องของเขา' : rel === 'PARTNER' ? 'หน่วยงานที่ทำงานร่วม' : ''; }
+
+/* form */
+function openForm(rateeId){
+  var task = S.tasks.filter(function(t){ return t.rateeId === rateeId; })[0];
+  S.form = { task: task, form: formFor(task.role), answers: {}, step: -1, strength: '', improve: '', other: '', loading: task.done };
+  var dr = loadDraft();
+  if (dr && !task.done){ S.form.answers = dr.a || {}; S.form.strength = dr.s || ''; S.form.improve = dr.i || ''; S.form.other = dr.o || ''; }
+  S.view = 'form'; render(); window.scrollTo(0, 0);
+  if (task.done){
+    call({ action:'getResponse', id:S.me.id, pin:S.pin, rateeId:rateeId }).then(function(r){
+      if (r){ S.form.answers = r.answers; S.form.strength = r.strength; S.form.improve = r.improve; S.form.other = r.other || ''; }
+      S.form.loading = false; render();
+    }, function(e){ S.form.loading = false; toast(e.message); render(); });
+  }
+}
+function stepCount(){ return 5 + 2; } // 5 หมวด + คำถามปลายเปิด + ตรวจทาน
+function catDone(ci){ var c = S.form.form.cats[ci]; for (var i = 1; i <= 3; i++){ var v = S.form.answers[c.code + i]; if (v === undefined || v === null || v === '') return false; } return true; }
+function vForm(){
+  var F = S.form, t = F.task, self = t.rel === 'SELF', FM = F.form;
+  var who = self ? 'ประเมินตนเอง' : esc(t.name) + (t.nick ? ' (' + esc(t.nick) + ')' : '');
+  var h = '<div class="wrap">' + header((self ? 'แบบประเมินตนเอง' : 'ประเมิน ' + (t.nick || t.name)) + ' · ' + FM.name, '<button class="btn sm ghost" data-act="back-home">✕ ปิด</button>');
+  if (F.loading) return h + '<div class="spin"></div></div>';
+  var nS = stepCount();
+  if (F.step >= 0){
+    h += '<div class="steps">'; for (var i = 0; i < nS; i++) h += '<i class="' + (i < F.step ? 'on' : i === F.step ? 'cur' : '') + '"></i>'; h += '</div>';
+  }
+  if (F.step === -1){
+    h += '<div class="card"><span class="chip rel-' + t.rel + '">' + (self ? 'ประเมินตนเอง' : 'คุณประเมินในฐานะ' + relAs(t.rel)) + '</span>' +
+      '<h1 style="margin-top:10px">' + who + '</h1><div class="muted small">' + esc(C.ROLES[t.role]) + ' · ' + esc(branchName(t.branch)) + '</div>' +
+      '<h3 style="margin-top:18px">วิธีตอบ</h3><p class="small muted" style="margin-top:0">' + (self ? 'ให้คะแนนตามความเป็นจริงว่าคุณแสดงพฤติกรรมแต่ละข้อบ่อยเพียงใดในช่วง 6 เดือนที่ผ่านมา' : 'ให้คะแนนจากสิ่งที่คุณเห็นจริงในการทำงานร่วมกันช่วง 6 เดือนที่ผ่านมา ข้อไหนไม่เคยเห็นหรือมีข้อมูลไม่พอ ให้เลือก “N/A ไม่มีข้อมูล”') + '</p>' +
+      '<div class="tbl"><table>' + C.SCALE.slice().reverse().map(function(s){ return '<tr><td style="width:44px;text-align:center"><b>' + s.v + '</b></td><td style="white-space:nowrap"><b>' + s.label + '</b></td><td class="muted">' + s.hint + '</td></tr>'; }).join('') +
+      '<tr><td style="text-align:center"><b>N/A</b></td><td><b>ไม่มีข้อมูล</b></td><td class="muted">ไม่เคยเห็น / ไม่มีข้อมูลพอ – ไม่นำไปคิดคะแนน</td></tr></table></div>' +
+      '<p class="small muted" style="margin-top:14px">แบบประเมิน<b>' + esc(FM.name) + '</b> มี 5 หมวด หมวดละ 3 ข้อ (รวม 15 ข้อ) และคำถามปลายเปิด 3 ข้อ ใช้เวลาประมาณ 3 นาที ระบบจะจำคำตอบไว้ให้ระหว่างทำ</p>' +
+      (self ? '<p class="xs">การประเมินตนเองใช้ดูความต่างระหว่างมุมมองของตนเองกับผู้อื่น ไม่นำไปคิดคะแนน</p>' : '<p class="xs">🔒 คำตอบของคุณจะรวมเป็นค่าเฉลี่ยกลุ่ม ไม่ระบุชื่อ' + (t.rel === 'SUP' ? ' (ยกเว้นกลุ่มหัวหน้าซึ่งมีผู้ประเมินคนเดียว)' : '') + '</p>') + '</div>';
+    h += navbar('<button class="btn pri block" data-act="step" data-d="1">เริ่มทำแบบประเมิน</button>');
+  } else if (F.step < 5){
+    var ci = F.step, c = FM.cats[ci];
+    h += '<div class="card"><div class="pillar">หมวด ' + c.code + ' · ' + (ci+1) + ' จาก 5</div><h2 style="margin:2px 0 2px">' + esc(c.name) + '</h2><div class="xs">' + who + '</div>';
+    c.items.forEach(function(txt, ii){
+      var k = c.code + (ii+1), v = F.answers[k];
+      h += '<div class="q"><div class="qt"><b>' + k + '</b>' + esc(txt) + '</div><div class="scale">' +
+        C.SCALE.map(function(s){ return '<button class="sc ' + (v === s.v ? 'sel' : '') + '" data-act="ans" data-k="' + k + '" data-v="' + s.v + '" aria-label="' + s.v + ' ' + s.label + '"><span class="n">' + s.v + '</span><span class="l">' + s.label + '</span></button>'; }).join('') +
+        '</div><button class="na ' + (v === 0 ? 'sel' : '') + '" data-act="ans" data-k="' + k + '" data-v="0">N/A ไม่มีข้อมูล</button></div>';
+    });
+    h += '</div>';
+    var ok = catDone(ci);
+    h += navbar('<button class="btn" data-act="step" data-d="-1">ย้อนกลับ</button><div class="grow xs" style="text-align:center">' + (ok ? '' : 'ตอบให้ครบ 3 ข้อเพื่อไปต่อ') + '</div><button class="btn pri" data-act="step" data-d="1" ' + (ok ? '' : 'disabled') + '>ถัดไป →</button>');
+  } else if (F.step === 5){
+    h += '<div class="card"><div class="pillar">คำถามปลายเปิด (ไม่บังคับ แต่ช่วยให้ผลมีประโยชน์มากขึ้น)</div><h2 style="margin:2px 0 12px">' + (self ? 'มองตัวเอง' : 'ฝากถึง' + esc(t.nick ? 'คุณ' + t.nick : t.name)) + '</h2>' +
+      C.OPEN_Q.map(function(q, i){ return '<label class="field"><span>' + (i+1) + '. ' + esc(self ? q.self : q.label) + '</span><textarea class="input" data-in="' + q.key + '" placeholder="' + (i === 0 ? 'เช่น ติดตามงานใกล้ชิด ช่วยแก้ปัญหาลูกค้าได้เร็ว' : i === 1 ? 'เขียนให้เจาะจงพฤติกรรม และเป็นประโยชน์ต่อการพัฒนา' : '') + '" style="min-height:' + (i === 2 ? 70 : 96) + 'px">' + esc(F[q.key]) + '</textarea></label>'; }).join('') + '</div>';
+    h += navbar('<button class="btn" data-act="step" data-d="-1">ย้อนกลับ</button><div class="grow"></div><button class="btn pri" data-act="step" data-d="1">ตรวจทาน →</button>');
+  } else {
+    var sc = C.catScores(F.answers), tot = C.overall(sc);
+    var na = C.ITEM_KEYS.filter(function(k){ return F.answers[k] === 0; }).length;
+    h += '<div class="card"><div class="pillar">ตรวจทานก่อนส่ง</div><h2 style="margin:2px 0 10px">' + who + '</h2><div class="tbl"><table><tr><th>หมวด</th><th class="num">เฉลี่ย</th><th></th></tr>' +
+      FM.cats.map(function(c, ci){ return '<tr><td>' + c.code + '. ' + esc(c.name) + '</td><td class="num">' + f2(sc[ci]) + '</td><td class="num"><button class="btn sm ghost" data-act="goto" data-s="' + ci + '">แก้</button></td></tr>'; }).join('') +
+      '<tr><td><b>เฉลี่ยรวม</b></td><td class="num"><b>' + f2(tot) + '</b> / 5</td><td></td></tr></table></div>' +
+      (na ? '<p class="xs">ตอบ N/A ' + na + ' ข้อ (ไม่นำไปคิดคะแนน)</p>' : '') +
+      (F.strength || F.improve || F.other ? '<p class="small muted">มีความคิดเห็นเพิ่มเติม ✓</p>' : '<p class="xs">ยังไม่ได้เขียนความคิดเห็น — <a href="#" data-act="goto" data-s="5">เพิ่มความคิดเห็น</a></p>') + '</div>';
+    h += navbar('<button class="btn" data-act="step" data-d="-1">ย้อนกลับ</button><div class="grow"></div><button class="btn pri" data-act="submit" ' + (S.busy ? 'disabled' : '') + '>' + (S.busy ? 'กำลังส่ง…' : 'ส่งแบบประเมิน') + '</button>');
+  }
+  return h + '</div>';
+}
+function navbar(inner){ return '<div class="navbar"><div class="in">' + inner + '</div></div>'; }
+
+/* ---------------- HR ---------------- */
+function vHrLogin(){
+  return '<div class="wrap" style="max-width:440px">' + header('สำหรับ HR') + '<div class="card"><h1>หน้าติดตามผล (HR)</h1>' +
+    (S.err ? '<div class="err">' + esc(S.err) + '</div>' : '') +
+    '<form data-form="hr"><label class="field"><span>รหัสผ่าน HR</span><input class="input" type="password" name="pw" required></label><button class="btn pri block" ' + (S.busy ? 'disabled' : '') + '>' + (S.busy ? 'กำลังโหลด…' : 'เข้าสู่หน้า HR') + '</button></form>' +
+    (IS_GAS ? '' : '<p class="xs">โหมดทดลอง: รหัสผ่าน <b>ris360hr</b></p>') + '</div><p class="xs" style="text-align:center"><a href="#" data-act="go-login">← กลับหน้าผู้ประเมิน</a></p></div>';
+}
+function hrModel(){
+  var D = S.hr.data, byId = {}; D.employees.forEach(function(e){ byId[e.id] = e; });
+  var act = D.assignments.filter(function(a){ return byId[a.raterId] && byId[a.rateeId] && byId[a.raterId].active && byId[a.rateeId].active; });
+  var st = C.status(D.employees, act, D.done.map(function(d){ return { raterId:d[0], rateeId:d[1], ts:d[2] }; }));
+  return { byId: byId, st: st, asg: act };
+}
+function vHr(){
+  var D = S.hr.data, M = hrModel(), st = M.st, cfg = D.cfg;
+  var tabs = [['overview','ภาพรวม & สถานะ'],['raters','ผู้ประเมิน / ส่งลิงก์'],['report','รายงานผล'],['setup','ตั้งค่า & วิธีใช้']];
+  var h = '<div class="wrap wide">' + header('หน้า HR · ติดตามและสรุปผล', '<button class="btn sm" data-act="hr-refresh">↻ รีเฟรช</button><button class="btn sm ghost" data-act="logout">ออก</button>');
+  h += '<div class="tabs">' + tabs.map(function(t){ return '<button class="tab ' + (S.hr.tab === t[0] ? 'on' : '') + '" data-act="tab" data-t="' + t[0] + '">' + t[1] + '</button>'; }).join('') + '</div>';
+  if (S.hr.tab === 'overview') h += hrOverview(M, cfg);
+  else if (S.hr.tab === 'raters') h += hrRaters(M, D);
+  else if (S.hr.tab === 'report') h += hrReport(M);
+  else h += hrSetup(M, D);
+  return h + '</div>';
+}
+function hrOverview(M, cfg){
+  var st = M.st, raters = Object.keys(st.raters).map(function(k){ return st.raters[k]; });
+  var full = raters.filter(function(r){ return r.done === r.total; }).length, pct = st.total ? Math.round(st.done / st.total * 100) : 0;
+  var dl = cfg.phase === 'open' ? daysLeft(cfg) + ' วัน' : cfg.phase === 'before' ? 'ยังไม่เริ่ม' : 'ปิดแล้ว';
+  var h = '<div class="row" style="margin-bottom:12px">' + phaseChip(cfg) + '<span class="xs">ช่วงประเมิน ' + thDate(cfg.start) + ' – ' + thDate(cfg.end) + (cfg.mode !== 'AUTO' ? ' · โหมด ' + cfg.mode : '') + '</span></div>';
+  h += '<div class="kpis">' +
+    kpi(pct + '%', 'ความคืบหน้ารวม', '<div class="bar ' + (pct === 100 ? 'good' : '') + '" style="margin-top:8px"><i style="width:' + pct + '%"></i></div>') +
+    kpi(st.done + '<span class="muted" style="font-size:16px"> / ' + st.total + '</span>', 'แบบประเมินที่ส่งแล้ว (ชุด)') +
+    kpi(full + '<span class="muted" style="font-size:16px"> / ' + raters.length + '</span>', 'ผู้ประเมินที่ทำครบแล้ว (คน)') +
+    kpi(dl, 'เวลาที่เหลือ') + '</div>';
+  // by branch
+  var br = {}; raters.forEach(function(r){ var e = M.byId[r.id]; var b = br[e.branch] = br[e.branch] || { t:0, d:0, people:0, full:0 }; b.t += r.total; b.d += r.done; b.people++; if (r.done === r.total) b.full++; });
+  h += '<div class="grid2"><div class="card"><h2>ความคืบหน้าตามสาขา</h2>' + C.BRANCH_ORDER.filter(function(b){ return br[b]; }).map(function(b){
+    var x = br[b], p = Math.round(x.d / x.t * 100);
+    return '<div style="margin-bottom:10px"><div class="row small"><span class="grow">' + esc(branchName(b)) + '</span><span class="xs">ครบ ' + x.full + '/' + x.people + ' คน</span><b style="min-width:42px;text-align:right">' + p + '%</b></div><div class="bar ' + (p === 100 ? 'good' : '') + '"><i style="width:' + p + '%"></i></div></div>';
+  }).join('') + '</div>';
+  h += '<div class="card"><h2>สถานะรายผู้ถูกประเมิน</h2><div class="xs" style="margin-bottom:8px">จำนวนแบบประเมินที่ได้รับ / ที่ต้องได้รับ แยกตามกลุ่มผู้ประเมิน</div><div class="tbl"><table><tr><th>ผู้ถูกประเมิน</th><th>หัวหน้า</th><th>เพื่อน</th><th>ลูกน้อง</th><th>หน่วยงานร่วม</th><th>ตนเอง</th><th class="num">รวม</th></tr>' +
+    rateeList(M).map(function(e){
+      var r = st.ratees[e.id] || { total:0, done:0, byRel:{} };
+      return '<tr><td><b>' + esc(e.name) + '</b><div class="xs">' + esc(C.ROLES[e.role]) + ' · ' + esc(branchName(e.branch)) + '</div></td>' +
+        ['SUP','PEER','SUB','PARTNER','SELF'].map(function(rel){ var g = r.byRel[rel]; if (!g) return '<td class="xs">–</td>'; return '<td><span class="chip ' + (g.done === g.total ? 'good' : g.done ? 'warn' : '') + '">' + g.done + '/' + g.total + '</span></td>'; }).join('') +
+        '<td class="num">' + (r.total && r.done === r.total ? '<span class="chip good">✓ ครบ</span>' : r.total ? Math.round(r.done / r.total * 100) + '%' : '–') + '</td></tr>';
+    }).join('') + '</table></div></div></div>';
+  return h;
+}
+function kpi(v, k, extra){ return '<div class="kpi"><div class="v">' + v + '</div><div class="k">' + k + '</div>' + (extra || '') + '</div>'; }
+function rateeList(M){
+  var rank = { GM:0, MGR:1, AM:2, TL:3, SPEC:4 };
+  return S.hr.data.employees.filter(function(e){ return e.active && C.RATEE_ROLES.indexOf(e.role) >= 0; })
+    .sort(function(a, b){ return rank[a.role] - rank[b.role] || C.BRANCH_ORDER.indexOf(a.branch) - C.BRANCH_ORDER.indexOf(b.branch); });
+}
+function personalLink(e){ return S.hr.data.url + '?u=' + encodeURIComponent(e.id) + '&k=' + encodeURIComponent(e.pin); }
+function linkMsg(e, M){
+  var r = M.st.raters[e.id], n = r ? r.total : 0;
+  return 'สวัสดีค่ะคุณ' + (e.nick || e.name.split(' ')[0]) + '\nขอเชิญทำแบบประเมิน 360 องศา ฝ่ายขาย (' + n + ' ชุด ใช้เวลาชุดละประมาณ 3 นาที)\nช่วงเวลา: ' + thDate(S.hr.data.cfg.start) + ' – ' + thDate(S.hr.data.cfg.end) +
+    '\nลิงก์ส่วนตัว (ห้ามส่งต่อ): ' + personalLink(e) + '\nหรือเข้าด้วยรหัสพนักงาน ' + e.id + ' และ PIN ' + e.pin + '\nคำตอบจะเป็นความลับ ขอบคุณค่ะ — HR';
+}
+function hrRaters(M, D){
+  var st = M.st, f = S.hr.filter, q = S.hr.q.trim().toLowerCase(), bf = S.hr.branch;
+  var list = Object.keys(st.raters).map(function(k){ return { r: st.raters[k], e: M.byId[k] }; })
+    .filter(function(x){ return f === 'all' || (f === 'pending' ? x.r.done < x.r.total : x.r.done === x.r.total); })
+    .filter(function(x){ return !bf || x.e.branch === bf; })
+    .filter(function(x){ return !q || (x.e.name + ' ' + x.e.nick + ' ' + x.e.id).toLowerCase().indexOf(q) >= 0; })
+    .sort(function(a, b){ return C.BRANCH_ORDER.indexOf(a.e.branch) - C.BRANCH_ORDER.indexOf(b.e.branch) || C.ROLE_RANK[b.e.role] - C.ROLE_RANK[a.e.role]; });
+  var h = '<div class="toolbar"><div class="seg">' + [['pending','ยังไม่ครบ'],['done','ครบแล้ว'],['all','ทั้งหมด']].map(function(x){ return '<button class="' + (f === x[0] ? 'on' : '') + '" data-act="filter" data-f="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</div>' +
+    '<select class="input" data-in="branch"><option value="">ทุกสาขา</option>' + C.BRANCH_ORDER.map(function(b){ return '<option value="' + b + '" ' + (bf === b ? 'selected' : '') + '>' + esc(branchName(b)) + '</option>'; }).join('') + '</select>' +
+    '<input class="input" data-in="q" placeholder="ค้นหาชื่อ / รหัส" value="' + esc(S.hr.q) + '" style="min-width:180px"><div class="grow"></div>' +
+    '<button class="btn sm" data-act="copy-remind">📣 ข้อความเตือนคนที่ยังไม่ครบ</button><button class="btn sm" data-act="copy-all-links">📋 ลิงก์ทุกคน (วางใน Excel)</button></div>';
+  h += '<div class="xs" style="margin-bottom:8px">' + list.length + ' คน · กด “คัดลอก” เพื่อได้ข้อความพร้อมลิงก์ส่วนตัวสำหรับส่งทาง LINE รายบุคคล</div>';
+  h += '<div class="tbl"><table><tr><th>ผู้ประเมิน</th><th>สาขา</th><th class="num">ความคืบหน้า</th><th>สถานะ</th><th>ยังค้างประเมิน</th><th></th></tr>' + list.map(function(x){
+    var r = x.r, e = x.e, s = r.done === r.total ? '<span class="chip good">✓ ครบ</span>' : r.done ? '<span class="chip warn">ทำบางส่วน</span>' : '<span class="chip bad">ยังไม่เริ่ม</span>';
+    var pend = r.pending.map(function(id){ var t = M.byId[id]; return id === e.id ? 'ตนเอง' : (t.nick || t.name.split(' ')[0]); });
+    return '<tr><td><b>' + esc(e.name) + '</b>' + (e.nick ? ' <span class="muted">(' + esc(e.nick) + ')</span>' : '') + '<div class="xs">' + esc(e.id) + ' · ' + esc(C.ROLES[e.role]) + '</div></td><td class="small">' + esc(branchName(e.branch)) + '</td>' +
+      '<td class="num" style="min-width:110px"><div class="row" style="gap:6px;justify-content:flex-end"><div class="bar" style="width:60px"><i style="width:' + Math.round(r.done / r.total * 100) + '%"></i></div>' + r.done + '/' + r.total + '</div></td><td>' + s + '</td>' +
+      '<td class="xs" style="max-width:260px">' + esc(pend.join(', ')) + '</td><td><button class="btn sm" data-act="copy-link" data-id="' + e.id + '">คัดลอก</button></td></tr>';
+  }).join('') + '</table></div>';
+  return h;
+}
+function hrSetup(M, D){
+  var emps = D.employees.filter(function(e){ return e.active; });
+  var cnt = {}; emps.forEach(function(e){ cnt[e.role] = (cnt[e.role] || 0) + 1; });
+  return '<div class="grid2"><div class="card"><h2>ภาพรวมข้อมูล</h2><table>' +
+    ['GM','MGR','AM','TL','SPEC','STAFF','PARTNER','EXEC'].map(function(r){ return '<tr><td>' + C.ROLES[r] + '</td><td class="num">' + (cnt[r] || 0) + ' คน</td></tr>'; }).join('') +
+    '<tr><td><b>คู่ประเมินทั้งหมด</b></td><td class="num"><b>' + M.asg.length + ' ชุด</b></td></tr></table>' +
+    '<h3 style="margin-top:16px">กติกาการจับคู่ (สร้างอัตโนมัติ)</h3><ul class="small muted" style="padding-left:18px;margin:0">' +
+    '<li><b>หัวหน้าทีม</b> ← ผจก./ผช.ผจก.สาขา (40%) · หัวหน้าทีมคนอื่น 3 คนแบบหมุนเวียน (20%) · ลูกทีมในทีม (40%) · ตนเอง</li>' +
+    '<li><b>ผจก./ผช.ผจก.</b> ← GM (40%) · ผจก./ผช.ผจก.คนอื่น 3 คนแบบหมุนเวียน (20%) · หัวหน้าทีม+พนักงานในสาขา (40%) · ตนเอง</li>' +
+    '<li><b>GM</b> ← ผู้บริหารสูงสุด (40%) · ผจก./ผช.ผจก.ทุกคน + ทีมสาขานิคมสะพานสี่ (40%) · ตนเอง</li>' +
+    '<li><b>สายเฉพาะทาง (SPEC)</b> ← หัวหน้าสาขา (40%) · เพื่อนสายเฉพาะทาง (30%) · หน่วยงานร่วม PARTNER (30%, HR เพิ่มแถวเองในชีต) · ตนเอง</li>' +
+    '<li>ลูกน้องตอบน้อยกว่า 3 คน → รวมกับกลุ่มเพื่อน · ตนเองไม่คิดคะแนน</li></ul>' +
+    '<div class="row" style="margin-top:14px"><button class="btn sm" data-act="regen">สร้างคู่ประเมินใหม่จากรายชื่อ</button>' + (IS_GAS ? '<button class="btn sm" data-act="write-summary">บันทึกสรุปผลลงชีต Summary</button>' : '') + '</div></div>' +
+    '<div class="card"><h2>วิธีปรับข้อมูล (ใน Google Sheet)</h2><ul class="small" style="padding-left:18px;margin:0">' +
+    '<li><b>Employees</b> — แก้ชื่อ/สาขา/บทบาท ได้โดยตรง พนักงานลาออกให้ใส่ “ออก” ในคอลัมน์สถานะ (ระบบจะตัดออกจากการประเมินทันที)</li>' +
+    '<li>บทบาทใช้รหัส: GM, MGR, AM, TL, SPEC (สายเฉพาะทาง), STAFF, PARTNER (ผู้ประเมินจากโชว์รูม/ศูนย์บริการ/ศูนย์ซ่อมสี), EXEC · ทีม A/B ใช้แยกหัวหน้าทีมในสาขาเดียวกัน</li>' +
+    '<li><b>Assignments</b> — เพิ่ม/ลบแถวเพื่อปรับคู่ประเมินเองได้ (เช่น เปลี่ยนเพื่อนร่วมงานที่ระบบเลือกให้) · สายเฉพาะทาง: เพิ่มแถว ความสัมพันธ์ = PARTNER สำหรับผู้ประเมินจากหน่วยงานร่วม · กด “สร้างคู่ประเมินใหม่” จะเขียนทับตามกติกา แต่เก็บแถว PARTNER ไว้</li>' +
+    '<li><b>Config</b> — เปลี่ยนวันเริ่ม/สิ้นสุด, รหัสผ่าน HR, จำนวนเพื่อนร่วมงาน (MAX_PEERS) · ตั้ง OPEN_MODE = OPEN เพื่อทดสอบก่อนวันจริง แล้วเปลี่ยนกลับเป็น AUTO และลบแถวทดสอบในชีต Responses</li>' +
+    '<li><b>Responses</b> — คำตอบดิบทุกชุด (ผู้ประเมินส่งซ้ำ = เขียนทับชุดเดิม)</li></ul></div></div>';
+}
+
+/* report */
+function bandCls(b){ return !b ? '' : b.key === 'ready' ? 'good' : b.key === 'develop' ? 'warn' : 'bad'; }
+function hrReport(M){
+  var R = S.hr.report;
+  if (!R) return '<div class="spin"></div>';
+  var st = M.st, pct = st.total ? Math.round(st.done / st.total * 100) : 0;
+  var list = rateeList(M);
+  if (!S.hr.sel || !R.report[S.hr.sel]) S.hr.sel = list.length ? list[0].id : null;
+  var h = pct < 100 ? '<div class="banner warn">ข้อมูลยังไม่ครบ (' + pct + '% · ' + st.done + '/' + st.total + ' ชุด) — รายงานด้านล่างคำนวณจากข้อมูลที่ได้รับแล้ว ควรใช้รายงานฉบับจริงเมื่อครบ 100%</div>'
+    : '<div class="banner info">ได้รับแบบประเมินครบทุกชุดแล้ว ✓ รายงานพร้อมใช้งาน</div>';
+  var cnt = { ready:0, develop:0, notready:0 };
+  list.forEach(function(e){ var r = R.report[e.id]; if (r && r.band) cnt[r.band.key]++; });
+  h += '<div class="kpis">' + kpi(list.length, 'ผู้ถูกประเมิน (คน)') + C.BANDS.map(function(b){ return kpi('<span class="chip ' + bandCls(b) + '" style="font-size:22px;padding:2px 12px">' + cnt[b.key] + '</span>', esc(b.label) + ' · ' + esc(b.note.split('·')[0])); }).join('') + '</div>';
+  h += '<div class="card"><div class="row"><h2 class="grow" style="margin:0">ภาพรวมคะแนนถ่วงน้ำหนัก 360 องศา (1–5, ไม่รวมการประเมินตนเอง)</h2><button class="btn sm" data-act="print-all">🖨 พิมพ์ / PDF รายงานทุกคน</button></div>' +
+    '<div class="xs" style="margin:4px 0 8px">เส้นประ = เกณฑ์ 3.50 (พัฒนาต่อ) และ 4.00 (พร้อมเติบโต) · คลิกแท่งเพื่อเปิดรายงานรายคน</div><div style="height:' + (list.length * 30 + 50) + 'px"><canvas id="ch-overview"></canvas></div></div>';
+  h += '<div class="rep-layout"><div class="card" style="padding:10px"><div class="xs" style="padding:4px 10px 8px">เลือกผู้ถูกประเมิน</div><div class="person-list">' + list.map(function(e){
+    var r = R.report[e.id];
+    return '<button class="pl ' + (S.hr.sel === e.id ? 'on' : '') + '" data-act="sel" data-id="' + e.id + '"><span><span style="font-weight:500">' + esc(e.name) + '</span><div class="xs">' + esc(C.ROLES[e.role]) + '</div></span><b>' + f2(r && r.others.score) + '</b></button>';
+  }).join('') + '</div></div><div>' + (S.hr.sel ? personReport(S.hr.sel, 'p') : '') + '</div></div>';
+  return h;
+}
+function relCols(R){ return ['SUP','PEER','SUB','PARTNER'].filter(function(rel){ return rel in R.weights && (R.weights[rel] > 0 || R.groups[rel].n); }); }
+function wPct(R, rel){ var t = 0; Object.keys(R.weights).forEach(function(k){ t += R.weights[k]; }); return t ? Math.round(R.weights[rel] / t * 100) : 0; }
+function relLabel(R, rel){ return C.REL_SHORT[rel] + (rel === 'PEER' && R.merged ? '+ลูกน้อง' : ''); }
+function personReport(id, pfx){
+  var R = S.hr.report.report[id], e = S.hr.data.employees.filter(function(x){ return x.id === id; })[0];
+  var G = R.groups, minN = S.hr.report.minN, FM = C.FORMS[R.form], cols = relCols(R);
+  var nline = cols.concat(['SELF']).map(function(rel){ var g = G[rel]; return relLabel(R, rel) + ' ' + g.n + ' คน' + (g.hidden ? '*' : ''); }).join(' · ');
+  var wline = cols.filter(function(rel){ return R.weights[rel] > 0; }).map(function(rel){ return relLabel(R, rel) + ' ' + wPct(R, rel) + '%'; }).join(' · ');
+  var anyHidden = cols.some(function(rel){ return G[rel].hidden; });
+  var h = '<div class="rep" id="rep-' + pfx + '-' + id + '"><div class="rep-head"><div class="grow"><div class="xs">รายงานผลการประเมิน 360 องศา · ' + esc(S.hr.data.cfg.title) + ' · แบบฟอร์ม' + esc(FM.name) + '</div><h1 style="margin:2px 0">' + esc(e.name) + (e.nick ? ' <span class="muted" style="font-weight:400">(' + esc(e.nick) + ')</span>' : '') + '</h1>' +
+    '<div class="muted small">' + esc(C.ROLES[e.role]) + ' · ' + esc(branchName(e.branch)) + ' · รหัส ' + esc(e.id) + '</div><div class="xs" style="margin-top:6px">ผู้ตอบ: ' + nline + '</div><div class="xs">น้ำหนัก: ' + wline + (R.merged ? ' (ลูกน้องตอบน้อยกว่า 3 คน จึงรวมกับกลุ่มเพื่อน)' : '') + (R.others.weightCoverage < 100 ? ' · <b>มีข้อมูลเพียง ' + R.others.weightCoverage + '% ของน้ำหนัก</b>' : '') + '</div></div>' +
+    '<div style="text-align:right"><div class="xs">คะแนนถ่วงน้ำหนัก (ไม่รวมตนเอง)</div><div class="score-big">' + f2(R.others.score) + '<small> / 5</small></div>' +
+    (R.band ? '<span class="chip ' + bandCls(R.band) + '" style="margin-top:6px">' + esc(R.band.label) + '</span><div class="xs" style="margin-top:4px;max-width:260px">' + esc(R.band.note) + '</div>' : '<span class="chip">ยังไม่มีข้อมูล</span>') +
+    '<div class="xs" style="margin-top:4px">ประเมินตนเอง: <b>' + f2(G.SELF.score) + '</b></div></div></div>';
+  h += '<div class="grid2"><div><h3>5 หมวด: ตนเอง vs ผู้อื่น</h3><div class="legend"><span><i style="background:' + COL.O + '"></i>ผู้อื่น (ถ่วงน้ำหนัก)</span><span><i class="dash"></i>ตนเอง</span></div><div style="height:300px"><canvas id="rad-' + pfx + '-' + id + '"></canvas></div></div>' +
+    '<div><h3>แยกตามกลุ่มผู้ประเมิน</h3><div class="legend">' + cols.concat(['SELF']).filter(function(rel){ return G[rel].n && !G[rel].hidden; }).map(function(rel){ return '<span><i style="background:' + COL[rel] + '"></i>' + relLabel(R, rel) + '</span>'; }).join('') + '</div><div style="height:300px"><canvas id="bar-' + pfx + '-' + id + '"></canvas></div></div></div>';
+  h += '<h3 style="margin-top:14px">ตารางคะแนนรายหมวด (เฉลี่ย 1–5)</h3><div class="tbl"><table><tr><th>หมวด</th>' + cols.map(function(rel){ return '<th class="num">' + relLabel(R, rel) + (R.weights[rel] ? ' <span class="xs">' + wPct(R, rel) + '%</span>' : '') + '</th>'; }).join('') + '<th class="num">ถ่วงน้ำหนัก</th><th class="num">ตนเอง</th><th class="num">ส่วนต่าง</th></tr>' +
+    FM.cats.map(function(c, ci){
+      var gp = R.gaps[ci], gcls = gp == null ? '' : gp >= .5 ? 'gap-pos' : gp <= -.5 ? 'gap-neg' : '';
+      var low = R.others.cats[ci] != null && R.others.cats[ci] < 3;
+      return '<tr><td>' + c.code + '. ' + esc(c.name) + (low ? ' <span class="chip bad">ต่ำกว่า 3.00</span>' : '') + '</td>' + cols.map(function(rel){ var g = G[rel]; return '<td class="num">' + (g.hidden ? '*' : f2(g.cats[ci])) + '</td>'; }).join('') +
+        '<td class="num"><b>' + f2(R.others.cats[ci]) + '</b></td><td class="num">' + f2(G.SELF.cats[ci]) + '</td><td class="num ' + gcls + '">' + (gp == null ? '–' : (gp > 0 ? '+' : '') + gp.toFixed(2)) + '</td></tr>';
+    }).join('') + '<tr><td><b>คะแนนรวม</b></td>' + cols.map(function(rel){ var g = G[rel]; return '<td class="num"><b>' + (g.hidden ? '*' : f2(g.score)) + '</b></td>'; }).join('') + '<td class="num"><b>' + f2(R.others.score) + '</b></td><td class="num"><b>' + f2(G.SELF.score) + '</b></td><td></td></tr></table></div>';
+  h += '<div class="xs" style="margin-top:6px">ส่วนต่าง = ตนเอง − ผู้อื่น · <span class="gap-pos">+0.50 ขึ้นไป</span> = มองตนเองสูงกว่าที่ผู้อื่นเห็น (Blind spot) · <span class="gap-neg">−0.50 ลงไป</span> = จุดแข็งที่ตนเองอาจยังไม่เห็น' + (anyHidden ? ' · * กลุ่มที่มีผู้ตอบน้อยกว่า ' + minN + ' คน ไม่แสดงแยกเพื่อรักษาความลับ แต่ยังนำไปคิดคะแนน' : '') + '</div>';
+  // item highlights
+  var items = R.items.map(function(x, i){ return { k:x.key, v:x.others, s:x.self, t:FM.cats[Math.floor(i/3)].items[i%3] }; }).filter(function(x){ return x.v != null; });
+  var hi = items.slice().sort(function(a, b){ return b.v - a.v; }).slice(0, 3), lo = items.slice().sort(function(a, b){ return a.v - b.v; }).slice(0, 3);
+  function li(arr){ return arr.length ? arr.map(function(x){ return '<li><b>' + x.k + '</b> ' + esc(x.t) + ' <span class="muted">(' + f2(x.v) + (x.s != null ? ' · ตนเอง ' + x.s : '') + ')</span></li>'; }).join('') : '<li class="muted">–</li>'; }
+  var blind = FM.cats.map(function(c, ci){ return { c:c, g:R.gaps[ci] }; }).filter(function(x){ return x.g != null && x.g >= .5; });
+  h += '<div class="grid2" style="margin-top:14px"><div class="box"><h3>✅ พฤติกรรมที่ทำได้ดี (3 ข้อสูงสุด)</h3><ol class="small" style="margin:0;padding-left:20px">' + li(hi) + '</ol></div>' +
+    '<div class="box"><h3>🎯 พฤติกรรมที่ควรพัฒนา (3 ข้อต่ำสุด)</h3><ol class="small" style="margin:0;padding-left:20px">' + li(lo) + '</ol>' +
+    (blind.length ? '<div class="xs" style="margin-top:8px">Blind spot: ' + blind.map(function(x){ return 'หมวด ' + x.c.code + ' ' + esc(x.c.short); }).join(', ') + '</div>' : '') + '</div></div>';
+  function cm(list){ if (!list.length) return '<div class="xs">– ไม่มีความคิดเห็น –</div>'; return list.map(function(x){ var g = G[x.rel]; var hid = g && g.hidden; return '<div class="cmt"><span class="chip rel-' + (hid ? '' : x.rel) + '" style="margin-right:6px">' + (hid ? 'อื่น ๆ' : relLabel(R, x.rel)) + '</span>' + esc(x.text) + '</div>'; }).join(''); }
+  h += '<div class="grid2" style="margin-top:14px"><div><h3>อยากให้ “ทำต่อไป”</h3>' + cm(R.comments.strength) + '</div><div><h3>อยากให้ “ทำเพิ่ม/ปรับ”</h3>' + cm(R.comments.improve) + '</div></div>';
+  if (R.comments.other.length) h += '<h3 style="margin-top:12px">ความเห็นอื่น ๆ</h3>' + cm(R.comments.other);
+  var sc = R.selfComments;
+  if (sc && (sc.strength || sc.improve || sc.other)) h += '<div class="box" style="margin-top:12px"><h3>มุมมองของตนเอง</h3><div class="small"><b>ทำได้ดี:</b> ' + esc(sc.strength || '–') + '</div><div class="small"><b>อยากทำเพิ่ม/ปรับ:</b> ' + esc(sc.improve || '–') + '</div>' + (sc.other ? '<div class="small"><b>อื่น ๆ:</b> ' + esc(sc.other) + '</div>' : '') + '</div>';
+  return h + '</div>';
+}
+var chartBase = { responsive:true, maintainAspectRatio:false, animation:false,
+  plugins:{ legend:{ display:false }, tooltip:{ backgroundColor:'#1c1b19', titleFont:{ family:'IBM Plex Sans Thai' }, bodyFont:{ family:'IBM Plex Sans Thai' }, padding:10,
+    callbacks:{ label:function(c){ return ' ' + c.dataset.label + ': ' + (c.raw == null ? '–' : Number(c.raw).toFixed(2)); } } } } };
+function mountPersonCharts(id, pfx){
+  var R = S.hr.report.report[id], G = R.groups, FM = C.FORMS[R.form];
+  var labels = FM.cats.map(function(c){ return c.code + ' ' + c.short; });
+  var rad = document.getElementById('rad-' + pfx + '-' + id), bar = document.getElementById('bar-' + pfx + '-' + id);
+  if (!rad || typeof Chart === 'undefined') return;
+  charts.push(new Chart(rad, { type:'radar', data:{ labels:labels, datasets:[
+    { label:'ผู้อื่น (ถ่วงน้ำหนัก)', data:R.others.cats, borderColor:COL.O, backgroundColor:'rgba(98,80,214,.12)', borderWidth:2, pointRadius:4, pointBackgroundColor:COL.O, pointBorderColor:'#fff', pointBorderWidth:2 },
+    { label:'ตนเอง', data:G.SELF.cats, borderColor:COL.SELF, backgroundColor:'transparent', borderWidth:2, borderDash:[6,4], pointRadius:4, pointBackgroundColor:COL.SELF, pointBorderColor:'#fff', pointBorderWidth:2 }
+  ]}, options: Object.assign({}, chartBase, { scales:{ r:{ min:0, max:5, ticks:{ stepSize:1, backdropColor:'transparent', color:'#7d7b75', font:{ size:10 } }, grid:{ color:'#e4e2db' }, angleLines:{ color:'#e4e2db' }, pointLabels:{ font:{ family:'IBM Plex Sans Thai', size:11 }, color:'#52514e' } } } }) }));
+  var ds = relCols(R).concat(['SELF']).filter(function(rel){ return G[rel].n && !G[rel].hidden; }).map(function(rel){
+    return { label:relLabel(R, rel), data:G[rel].cats, backgroundColor:COL[rel], borderRadius:4, borderSkipped:'start', barPercentage:.82, categoryPercentage:.8 };
+  });
+  charts.push(new Chart(bar, { type:'bar', data:{ labels:labels, datasets:ds }, options: Object.assign({}, chartBase, { indexAxis:'y',
+    scales:{ x:{ min:0, max:5, ticks:{ stepSize:1, color:'#7d7b75' }, grid:{ color:'#eeede8' } }, y:{ ticks:{ font:{ family:'IBM Plex Sans Thai', size:11 }, color:'#52514e' }, grid:{ display:false } } } }) }));
+}
+function mountReportCharts(){
+  if (!S.hr.report || typeof Chart === 'undefined') return;
+  var list = rateeList(), R = S.hr.report.report;
+  var el = document.getElementById('ch-overview');
+  if (el){
+    var refLines = { id:'refl', afterDatasetsDraw:function(ch){ var x = ch.scales.x, y = ch.scales.y, ctx = ch.ctx; ctx.save(); ctx.setLineDash([4,4]); ctx.strokeStyle = '#9a9890'; ctx.lineWidth = 1;
+      [3.5,4].forEach(function(v){ var px = x.getPixelForValue(v); ctx.beginPath(); ctx.moveTo(px, y.top); ctx.lineTo(px, y.bottom); ctx.stroke(); ctx.fillStyle = '#7d7b75'; ctx.font = '11px IBM Plex Sans Thai'; ctx.fillText(v.toFixed(2), px + 3, y.top + 10); }); ctx.restore(); } };
+    var valLabels = { id:'vl', afterDatasetsDraw:function(ch){ var ctx = ch.ctx, m = ch.getDatasetMeta(0); ctx.save(); ctx.fillStyle = '#1c1b19'; ctx.font = '600 12px IBM Plex Sans Thai'; ctx.textBaseline = 'middle';
+      m.data.forEach(function(b, i){ var v = ch.data.datasets[0].data[i]; if (v != null) ctx.fillText(v.toFixed(2), b.x + 6, b.y); }); ctx.restore(); } };
+    charts.push(new Chart(el, { type:'bar', plugins:[refLines, valLabels], data:{ labels:list.map(function(e){ return e.name + ' · ' + ({GM:'GM',MGR:'ผจก.',AM:'ผช.ผจก.',TL:'หัวหน้าทีม',SPEC:'สายเฉพาะทาง'})[e.role]; }),
+      datasets:[{ label:'คะแนน 360', data:list.map(function(e){ return R[e.id] ? R[e.id].others.score : null; }), backgroundColor:list.map(function(e){ return S.hr.sel === e.id ? '#1c5cab' : '#2a78d6'; }), borderRadius:4, borderSkipped:'start', barPercentage:.7 }] },
+      options: Object.assign({}, chartBase, { indexAxis:'y', onClick:function(evt, els){ if (els.length){ S.hr.sel = list[els[0].index].id; render(); } },
+        plugins:{ legend:{ display:false }, tooltip: Object.assign({}, chartBase.plugins.tooltip, { callbacks:{ label:function(c){ var r = R[list[c.dataIndex].id]; return ' ' + (c.raw == null ? '–' : c.raw.toFixed(2)) + ' / 5 · ' + (r && r.band ? r.band.label : '') + ' · ตนเอง ' + f2(r && r.groups.SELF.score); } } }) },
+        scales:{ x:{ min:0, max:5, ticks:{ stepSize:1, color:'#7d7b75' }, grid:{ color:'#eeede8' } }, y:{ ticks:{ font:{ family:'IBM Plex Sans Thai', size:12 }, color:'#1c1b19' }, grid:{ display:false } } } }) }));
+  }
+  if (S.hr.sel) mountPersonCharts(S.hr.sel, 'p');
+}
+function printAll(){
+  var pa = document.getElementById('print-area'), list = rateeList();
+  pa.innerHTML = list.map(function(e){ return personReport(e.id, 'pr'); }).join('');
+  pa.style.display = 'block';
+  list.forEach(function(e){ mountPersonCharts(e.id, 'pr'); });
+  pa.style.display = '';
+  setTimeout(function(){ try { window.print(); } catch(err){ toast('เบราว์เซอร์นี้ไม่อนุญาตให้พิมพ์ — กรุณาเปิดผ่านลิงก์ Web app'); } }, 300);
+}
+
+/* demo panel */
+function vDemo(){
+  var opts = DEMO.emps.map(function(e){ return '<option value="' + e.id + '">' + esc(e.name) + ' · ' + esc(C.ROLES[e.role]) + ' · ' + esc(branchName(e.branch)) + '</option>'; }).join('');
+  return '<div class="demo ' + (S.demoOpen ? 'open' : '') + '"><div class="hd" data-act="demo-toggle"><b>โหมดทดลอง</b> <span class="xs">' + (S.demoOpen ? '▴ ย่อ' : '▾ เปิดเมนู') + '</span></div><div class="body"><div class="xs">ข้อมูลไม่ถูกบันทึกจริง</div><select data-in="demo-as"><option value="">เข้าในฐานะผู้ประเมิน…</option>' + opts + '</select>' +
+    '<div class="row" style="gap:6px"><button class="btn sm" data-act="demo-hr">หน้า HR</button><button class="btn sm" data-act="demo-fill">สุ่มคำตอบ 85%</button><button class="btn sm" data-act="demo-reset">ล้าง</button></div></div></div>';
+}
+
+/* ---------------- actions ---------------- */
+function doLogin(id, pin){
+  S.busy = true; S.err = ''; render();
+  return call({ action:'login', id:id, pin:pin }).then(function(d){
+    S.busy = false; S.me = d.me; S.pin = pin; S.tasks = d.tasks; S.cfg = d.cfg; S.view = 'home'; render();
+  }, function(e){ S.busy = false; S.err = e.message; S.view = 'login'; render(); });
+}
+function refreshTasks(){ return call({ action:'login', id:S.me.id, pin:S.pin }).then(function(d){ S.tasks = d.tasks; S.cfg = d.cfg; }); }
+function doHr(pw){
+  S.busy = true; S.err = ''; if (S.view !== 'hr') render();
+  return Promise.all([call({ action:'admin', pw:pw }), call({ action:'report', pw:pw })]).then(function(r){
+    S.busy = false; S.hr.pw = pw; S.hr.data = r[0]; S.hr.report = r[1]; S.cfg = r[0].cfg; S.view = 'hr'; render();
+  }, function(e){ S.busy = false; S.err = e.message; S.view = 'hrlogin'; render(); });
+}
+
+document.addEventListener('submit', function(ev){
+  var f = ev.target; ev.preventDefault();
+  if (f.dataset.form === 'login') doLogin(f.elements['empid'].value.trim(), f.elements['pin'].value.trim());
+  if (f.dataset.form === 'hr') doHr(f.elements['pw'].value);
+});
+document.addEventListener('input', function(ev){
+  var t = ev.target, k = t.dataset && t.dataset.in; if (!k) return;
+  if (k === 'strength' || k === 'improve' || k === 'other'){ S.form[k] = t.value; saveDraft(); }
+  if (k === 'q'){ S.hr.q = t.value; var pos = t.selectionStart; render(); var n = document.querySelector('[data-in="q"]'); if (n){ n.focus(); try { n.setSelectionRange(pos, pos); } catch(e){} } }
+});
+document.addEventListener('change', function(ev){
+  var t = ev.target, k = t.dataset && t.dataset.in; if (!k) return;
+  if (k === 'branch'){ S.hr.branch = t.value; render(); }
+  if (k === 'demo-as' && t.value){ S.demoOpen = false; var e = DEMO.emps.filter(function(x){ return x.id === t.value; })[0]; doLogin(e.id, e.pin); }
+});
+document.addEventListener('click', function(ev){
+  var b = ev.target.closest('[data-act]'); if (!b) return;
+  var a = b.dataset.act;
+  if (a === 'modal-close-bg'){ if (ev.target === b) closeModal(); return; }
+  if (b.tagName === 'A') ev.preventDefault();
+  var F = S.form;
+  switch(a){
+    case 'modal-close': closeModal(); break;
+    case 'go-hrlogin': S.err = ''; S.view = 'hrlogin'; render(); break;
+    case 'go-login': S.err = ''; S.view = 'login'; render(); break;
+    case 'logout': S.me = null; S.pin = ''; S.hr.pw = ''; S.hr.data = null; S.view = 'login'; render(); break;
+    case 'open': openForm(b.dataset.id); break;
+    case 'back-home': S.view = 'home'; render(); break;
+    case 'step': F.step = Math.max(-1, Math.min(stepCount() - 1, F.step + Number(b.dataset.d))); render(); window.scrollTo(0, 0); break;
+    case 'goto': F.step = Number(b.dataset.s); render(); window.scrollTo(0, 0); break;
+    case 'ans': {
+      F.answers[b.dataset.k] = Number(b.dataset.v); saveDraft();
+      var y = window.scrollY; render(); window.scrollTo(0, y); break;
+    }
+    case 'submit': {
+      S.busy = true; render();
+      call({ action:'submit', id:S.me.id, pin:S.pin, rateeId:F.task.rateeId, answers:F.answers, strength:F.strength, improve:F.improve, other:F.other }).then(function(){
+        clearDraft(); return refreshTasks();
+      }).then(function(){ S.busy = false; S.view = 'home'; render(); window.scrollTo(0, 0); toast('ส่งแบบประเมินเรียบร้อย ขอบคุณค่ะ'); },
+        function(e){ S.busy = false; render(); modal('<h2>ส่งไม่สำเร็จ</h2><p>' + esc(e.message) + '</p><div class="row" style="justify-content:flex-end"><button class="btn pri" data-act="modal-close">ตกลง</button></div>'); });
+      break;
+    }
+    case 'tab': S.hr.tab = b.dataset.t; render(); break;
+    case 'filter': S.hr.filter = b.dataset.f; render(); break;
+    case 'sel': S.hr.sel = b.dataset.id; render(); break;
+    case 'hr-refresh': doHr(S.hr.pw).then(function(){ toast('อัปเดตข้อมูลล่าสุดแล้ว'); }); break;
+    case 'copy-link': { var M = hrModel(), e = M.byId[b.dataset.id]; copyText(linkMsg(e, M), 'คัดลอกข้อความ + ลิงก์ของ ' + (e.nick || e.name) + ' แล้ว'); break; }
+    case 'copy-all-links': {
+      var M2 = hrModel(), rows = ['รหัส\tชื่อ-สกุล\tชื่อเล่น\tสาขา\tตำแหน่ง\tจำนวนชุด\tPIN\tลิงก์ส่วนตัว'];
+      Object.keys(M2.st.raters).forEach(function(id){ var e = M2.byId[id]; rows.push([e.id, e.name, e.nick, branchName(e.branch), C.ROLES[e.role], M2.st.raters[id].total, e.pin, personalLink(e)].join('\t')); });
+      copyText(rows.join('\n'), 'คัดลอกรายการลิงก์แล้ว วางใน Excel/Sheet ได้เลย'); break;
+    }
+    case 'copy-remind': {
+      var M3 = hrModel(), cfg = S.hr.data.cfg, by = {};
+      Object.keys(M3.st.raters).forEach(function(id){ var r = M3.st.raters[id]; if (r.done < r.total){ var e = M3.byId[id]; (by[e.branch] = by[e.branch] || []).push((e.nick ? 'คุณ' + e.nick : e.name) + ' (เหลือ ' + (r.total - r.done) + ' ชุด)'); } });
+      var txt = '📣 แจ้งเตือนแบบประเมิน 360 องศา ฝ่ายขาย\nปิดรับ ' + thDate(cfg.end) + (cfg.phase === 'open' ? ' (เหลือ ' + daysLeft(cfg) + ' วัน)' : '') + '\nรายชื่อที่ยังประเมินไม่ครบ:\n';
+      C.BRANCH_ORDER.forEach(function(bk){ if (by[bk]) txt += '\n▪️ ' + branchName(bk) + '\n' + by[bk].map(function(s){ return '   - ' + s; }).join('\n') + '\n'; });
+      txt += '\nกรุณาเข้าลิงก์ส่วนตัวที่ HR ส่งให้ ขอบคุณค่ะ 🙏';
+      copyText(txt, 'คัดลอกข้อความเตือนแล้ว'); break;
+    }
+    case 'regen': confirmBox('สร้างคู่ประเมินใหม่?', 'ระบบจะเขียนทับชีต Assignments ตามกติกาอัตโนมัติจากรายชื่อปัจจุบัน (คำตอบที่ส่งแล้วไม่หาย) — ถ้าเคยแก้คู่ประเมินเองในชีต การแก้ไขนั้นจะหายไป', 'สร้างใหม่', function(){
+      call({ action:'regenerate', pw:S.hr.pw }).then(function(r){ toast('สร้างแล้ว ' + r.count + ' คู่'); return doHr(S.hr.pw); }, function(e){ toast(e.message); }); }); break;
+    case 'write-summary': call({ action:'writeSummary', pw:S.hr.pw }).then(function(r){ toast('บันทึกลงชีต Summary แล้ว (' + r.rows + ' แถว)'); }, function(e){ toast(e.message); }); break;
+    case 'print-all': printAll(); break;
+    case 'demo-toggle': S.demoOpen = !S.demoOpen; render(); break;
+    case 'demo-hr': S.demoOpen = false; doHr('ris360hr'); break;
+    case 'demo-fill': call({ action:'demoFill', rate:.85 }).then(function(){ toast('สุ่มคำตอบตัวอย่างแล้ว'); if (S.view === 'hr') doHr(S.hr.pw); else if (S.me) refreshTasks().then(render); }); break;
+    case 'demo-reset': call({ action:'demoReset' }).then(function(){ toast('ล้างคำตอบแล้ว'); if (S.view === 'hr') doHr(S.hr.pw); else if (S.me) refreshTasks().then(render); }); break;
+  }
+});
+
+/* ---------------- start ---------------- */
+function start(params){
+  params = params || {};
+  if (params.u && params.k) doLogin(String(params.u), String(params.k));
+  else if (params.hr !== undefined) { S.view = 'hrlogin'; render(); }
+  else { S.view = 'login'; render(); }
+}
+if (IS_GAS && google.script.url) google.script.url.getLocation(function(loc){ start(loc.parameter); });
+else start({});
+})();
+</script>
+</body>
+</html>
